@@ -167,6 +167,106 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Mysql数据插入" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/mysql/Mysql数据插入/">Mysql数据插入</a>
+    </h1>
+  
+
+        
+        <a href="/mysql/Mysql数据插入/" class="archive-article-date">
+  	<time datetime="2017-04-22T09:27:56.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-22</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>数据库中四大操作：增、删、查、改。每个操作都有若干种方法得到结果，在这个小结中主要介绍一下MySQL的“增”，这里的增是指在数据表中增加／插入数据。主要有以下几种方法:</p>
+<h3 id="基本插入方法—INSERT"><a href="#基本插入方法—INSERT" class="headerlink" title="基本插入方法—INSERT"></a>基本插入方法—INSERT</h3><p>这是Mysql中最常见的方法了，语法结构有以下两种</p>
+<ol>
+<li><code>INSERT INTO table_name VALUES(null, 拿破仑, 38, 份);</code> 这是一种不安全的插入方式，应当尽量避免使用在插入的数据中，没有明确给出列名，因此每个值必须与数据表中的字段名按顺序一一对应，并且对空值字段也要赋值。</li>
+<li><code>INSERT INTO table_name(id, name, price, measurement) VALUES(null, 拿破仑, 38, 份);</code> 相比第一条列出的插入方法，下面这种方法更加安全有效，在这条中对每个需要赋值的字段名列出，然后再一一赋值。这样，即使不知道数据库表中字段的顺序也能很好的插入数据，如果其中某些字段不需要赋值也能很好的解决。另外对于一次性插入多行数据只要在VALUE后列出所有的数据即可。对于不赋值的数据，应该满足以下要求：1. 该列允许定义为NULL; 2. 该列可以有默认值，如果不赋值将赋予默认值。</li>
+</ol>
+<h3 id="选择插入—INSERT…SELECT"><a href="#选择插入—INSERT…SELECT" class="headerlink" title="选择插入—INSERT…SELECT"></a>选择插入—INSERT…SELECT</h3><p><code>INSERT INTO new_table VALUES(name, price, measurement) SELECT name, price, measurement FROM old_talbe WHERE id = 1;</code>该语句表示将old表中满足特定条件的数据检索出来并插入到new_table中。</p>
+<h3 id="去重插入—REPLACE、ON-DUPLICATE-KEY-UPDATE"><a href="#去重插入—REPLACE、ON-DUPLICATE-KEY-UPDATE" class="headerlink" title="去重插入—REPLACE、ON DUPLICATE KEY UPDATE"></a>去重插入—REPLACE、ON DUPLICATE KEY UPDATE</h3><p><strong>去重插入是该小结的重点:</strong> 在插入数据的时候，我们经常会遇到要先判断数据是否存在，如果存在则进行修改，不存在再对其进行插入。这部分将介绍几种避免重复插入的方法：</p>
+<ol>
+<li><code>REPLACE INTO table_name(id, name, price, measurement) VALUES(1, 拿破仑, 40, 份)</code>该语句是insert语句的加强版，只是在插入数据的过程中将会执行两个动作：<blockquote>
+<p>(1) 判定该数据是否存在；<br>(2) 如果存在则进行删除旧的数据，再插入新的值（影响表中的两行数据），如果不存在则进行插入造作（影响一行数据）。</p>
+</blockquote>
+</li>
+</ol>
+<p>该方法能够避免重复插入有特定约束条件的数据，比如主键（<code>PRIMARY KEY</code>）或者是唯一索引(<code>UNIQUE KEY</code>)，但是如果没有这些约束条件，Replace就和Insert语句一样了。另外要使用Replace语句，必须同时拥有insert和delete权限。</p>
+<ol>
+<li>另外一种去除重复插入的方法就是使用<code>INSERT...ON DUPLICATE KEY UPDATE</code>，实例如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">INSERT INTO table_name(id, name, price, measurement) VALUES(1, 拿破仑, 40, 份) ON DUPLICATE KEY UPDATE price = 40;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>该方法也会对重复的值进行先删后插入(影响行数可能为1或2)的操作，与Replace类似。</p>
+<h4 id="参考资源"><a href="#参考资源" class="headerlink" title="参考资源"></a>参考资源</h4><ul>
+<li><a href="http://database.51cto.com/art/200811/97974_all.htm" target="_blank" rel="external">向MySQL数据表插入行记录（INSERT）</a></li>
+<li><a href="http://lobert.iteye.com/blog/1604122" target="_blank" rel="external">ON DUPLICATE KEY UPDATE重复插入时更新</a></li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">mysql</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">数据库</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/BI/" class="article-tag-list-link color3">BI</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/mysql/Mysql数据插入/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-概率论-蒙特霍尔悖论" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -686,10 +786,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">云跟帖</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">蒙特霍尔</a>
               </li>
              
@@ -699,6 +795,18 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">概率论</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">数据库</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">云跟帖</a>
               </li>
             
             <div class="clearfix"></div>
