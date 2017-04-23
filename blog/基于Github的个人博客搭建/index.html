@@ -71,7 +71,7 @@ var _hmt = _hmt || [];
 			
 				<li><a href="/">主页</a></li>
 	        
-				<li><a href="/categories/BI/">商业智能</a></li>
+				<li><a href="/categories/machingLearning/">机器学习&amp;数据挖掘</a></li>
 	        
 				<li><a href="/categories/visualization/">数据可视化</a></li>
 	        
@@ -153,7 +153,7 @@ var _hmt = _hmt || [];
 				
 					<li style="width: 25%"><a href="/">主页</a></li>
 		        
-					<li style="width: 25%"><a href="/categories/BI/">商业智能</a></li>
+					<li style="width: 25%"><a href="/categories/machingLearning/">机器学习&amp;数据挖掘</a></li>
 		        
 					<li style="width: 25%"><a href="/categories/visualization/">数据可视化</a></li>
 		        
@@ -213,6 +213,7 @@ var _hmt = _hmt || [];
 <li>找到<code>thems/yilia/layout/post/duoshuo.ejs</code>,用刚才的代码覆盖原有的代码，之后的代码如下：</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;duoshuo&quot;&gt;</div><div class="line">	&lt;div id=&quot;cloud-tie-wrapper&quot; class=&quot;cloud-tie-wrapper&quot;&gt;&lt;/div&gt;</div><div class="line">	&lt;script&gt;</div><div class="line">	  var cloudTieConfig = &#123;</div><div class="line">	    url: document.location.href, </div><div class="line">	    sourceId: &quot;&quot;,</div><div class="line">	    productKey: &quot;your_key_is_here&quot;,</div><div class="line">	    target: &quot;cloud-tie-wrapper&quot;</div><div class="line">	  &#125;;</div><div class="line">	&lt;/script&gt;</div><div class="line">	&lt;script src=&quot;https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js&quot;&gt;&lt;/script&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<p>2017-04-20<br>Remark：当前评论存在的问题是对一篇文章进行评论后发现其他的文章也有这条评论了，也就是评论混淆了。需要重点解决</p>
 <ol>
 <li>在yilia的<code>_config.yml</code>中设置<code>duoshuo: true</code></li>
 <li>在需要评论的文章Front-matter部分设置 <code>comments: true</code></li>
@@ -505,6 +506,14 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">数据库</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
@@ -517,6 +526,22 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">云跟帖</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据挖掘</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">学习资料</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">蒙特霍尔</a>
               </li>
              
@@ -526,18 +551,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">概率论</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">mysql</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">数据库</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">云跟帖</a>
               </li>
             
             <div class="clearfix"></div>
