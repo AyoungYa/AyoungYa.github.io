@@ -16,12 +16,10 @@
 <meta property="og:site_name" content="润泽大地">
 <meta property="og:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;这里主要用于介绍机器学习和数据挖掘中常用的一些统计学概念及计算公式 欧几里得距离(欧氏距离 Euclidean Distance)欧式距离是指多维空间中两点的距离，是直线距离。假设有点$A(p_1, p_2, … p_n) $, $B(q_1, q_2, … q_n)$, 其中n为空间的维度，那么AB之间的欧式距离为下面公式所示： $$ D =">
 <meta property="og:locale" content="zh-guoyu">
-<meta property="og:image" content="http://chart.googleapis.com/chart?cht=tx&chl= r= \frac{\sum(XY) - \frac{\sum{X}\sum{Y}}{N}}{\sqrt{(\sum{X^2 - \frac{(\sum{X})^2}{N}})(\sum{Y^2 - \frac{(\sum{Y})^2}{N}})}}">
-<meta property="og:updated_time" content="2017-05-11T10:10:37.000Z">
+<meta property="og:updated_time" content="2017-09-04T11:43:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="集体智慧编程--概率与统计学中的一些基本概念">
 <meta name="twitter:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;这里主要用于介绍机器学习和数据挖掘中常用的一些统计学概念及计算公式 欧几里得距离(欧氏距离 Euclidean Distance)欧式距离是指多维空间中两点的距离，是直线距离。假设有点$A(p_1, p_2, … p_n) $, $B(q_1, q_2, … q_n)$, 其中n为空间的维度，那么AB之间的欧式距离为下面公式所示： $$ D =">
-<meta name="twitter:image" content="http://chart.googleapis.com/chart?cht=tx&chl= r= \frac{\sum(XY) - \frac{\sum{X}\sum{Y}}{N}}{\sqrt{(\sum{X^2 - \frac{(\sum{X})^2}{N}})(\sum{Y^2 - \frac{(\sum{Y})^2}{N}})}}">
   
     <link rel="alternative" href="/atom.xml" title="润泽大地" type="application/atom+xml">
   
@@ -198,10 +196,12 @@ var _hmt = _hmt || [];
 <p>$$ D = \sqrt{\sum_{i=1}^{n}(p_i-q_i)^2 } = \sqrt{(p_1-q_1)^2 + (p_2-q_2)^2+…+(p_n-q_n)^2}$$</p>
 <p>python代码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">euclidean</span><span class="params">(v1, v2)</span>:</span></div><div class="line">    <span class="keyword">if</span> len(v1) != len(v2) <span class="keyword">or</span> len(v1) &lt;= <span class="number">0</span>:</div><div class="line">        <span class="keyword">return</span> <span class="number">0.0</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> sqrt(sum([(v1[i] - v2[i]) ** <span class="number">2</span> <span class="keyword">for</span> i <span class="keyword">in</span> xrange(len(v1))]))</div></pre></td></tr></table></figure>
-<h2 id="皮尔逊相关系数-Pearson-Correlation-Coefficient"><a href="#皮尔逊相关系数-Pearson-Correlation-Coefficient" class="headerlink" title="皮尔逊相关系数(Pearson Correlation Coefficient)"></a>皮尔逊相关系数(Pearson Correlation Coefficient)</h2><p>皮尔逊相关系数是一种度量两个变量间相关程度的方法。值介于-1～+1之间，如果值为+1则表示变量完全正相关，0表示无关，-1表示完全负相关。计算公式如下<br><img src="http://chart.googleapis.com/chart?cht=tx&chl= r= \frac{\sum(XY) - \frac{\sum{X}\sum{Y}}{N}}{\sqrt{(\sum{X^2 - \frac{(\sum{X})^2}{N}})(\sum{Y^2 - \frac{(\sum{Y})^2}{N}})}}" style="align: center;"></p>
-<p>$$ r= \frac{\sum{XY} - \frac{\sumX \sumY}{N}}{\sqrt{(\sum{x^2 - \frac{(\sum{X})^2}{N}})(\sum{Y^2 - \frac{(\sum{Y})^2}{N}})}} $$</p>
+<h2 id="皮尔逊相关系数-Pearson-Correlation-Coefficient"><a href="#皮尔逊相关系数-Pearson-Correlation-Coefficient" class="headerlink" title="皮尔逊相关系数(Pearson Correlation Coefficient)"></a>皮尔逊相关系数(Pearson Correlation Coefficient)</h2><p>皮尔逊相关系数是一种度量两个变量间相关程度的方法。值介于-1～+1之间，如果值为+1则表示变量完全正相关，0表示无关，-1表示完全负相关。计算公式如下<br><!-- <img src="http://chart.googleapis.com/chart?cht=tx&chl= r= \frac{\sum(XY) - \frac{\sum{X}\sum{Y}}{N}}{\sqrt{(\sum{X^2 - \frac{(\sum{X})^2}{N}})(\sum{Y^2 - \frac{(\sum{Y})^2}{N}})}}" style="align: center;">
+ --><br>$$ r=\frac{\sum(XY)-\frac{\sum(X)\sum(Y)}{N}}{\sqrt{(\sum{X^2}-\frac{(\sum{X})^2}{N})(\sum{Y^2-\frac{(\sum{Y})^2}{N}})}}$$</p>
 <p>计算方式：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">pearson</span><span class="params">(v1, v2)</span>:</span></div><div class="line">    <span class="keyword">if</span> len(v1) != len(v2):</div><div class="line">        print(<span class="string">"len(v1) != len(v2). len(v1) = %d, len(v2) = %d"</span> % (len(v1), len(v2)))</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span></div><div class="line">    length = len(v1)</div><div class="line"></div><div class="line">    sum_v1 = <span class="number">1.0</span> * sum(v1)</div><div class="line">    sum_v2 = <span class="number">1.0</span> * sum(v2)</div><div class="line"></div><div class="line">    sum_v1_sq = <span class="number">1.0</span> * sum([v ** <span class="number">2</span> <span class="keyword">for</span> v <span class="keyword">in</span> v1])</div><div class="line">    sum_v2_sq = <span class="number">1.0</span> * sum([v ** <span class="number">2</span> <span class="keyword">for</span> v <span class="keyword">in</span> v2])</div><div class="line"></div><div class="line">    p_sum = <span class="number">1.0</span> * sum([v1[i] * v2[i] <span class="keyword">for</span> i <span class="keyword">in</span> xrange(length)])</div><div class="line">    num = p_sum - (sum_v1 * sum_v2 / length)</div><div class="line">    den = sqrt((sum_v1_sq - pow(sum_v1, <span class="number">2</span>) / length) * (sum_v2_sq - pow(sum_v2, <span class="number">2</span>) / length))</div><div class="line"></div><div class="line">    <span class="keyword">if</span> den == <span class="number">0</span>:</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> num / den</div></pre></td></tr></table></figure></p>
-<h2 id="加权平均-Weighted-Mean"><a href="#加权平均-Weighted-Mean" class="headerlink" title="加权平均(Weighted Mean)"></a>加权平均(Weighted Mean)</h2><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<h2 id="加权平均-Weighted-Mean"><a href="#加权平均-Weighted-Mean" class="headerlink" title="加权平均(Weighted Mean)"></a>加权平均(Weighted Mean)</h2><p>加权平均是对参与平均运算的每一个观测变量都有一个对应的权重值。具体公式如下：<br>$$ \bar{x} = \frac{w_1x_1 + w_2x_2+…+w_nx_n}{w_1+w_2+…+w_n} $$</p>
+<p>计算方式<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">weightedmen</span><span class="params">(x, w)</span>:</span></div><div class="line">    <span class="keyword">if</span> len(x) != len(w):</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span></div><div class="line">    num = <span class="number">1.0</span> * sum([x[i] * w[i] <span class="keyword">for</span> i <span class="keyword">in</span> xrange(len(x))])</div><div class="line">    den = sum([w[i] <span class="keyword">for</span> i <span class="keyword">in</span> xrange(len(x))])</div><div class="line"></div><div class="line">    <span class="keyword">return</span> num/den</div></pre></td></tr></table></figure></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
 <li><a href="http://shop.oreilly.com/product/9780596529321.do" target="_blank" rel="external">集体智慧编程</a></li>
 </ul>
 
@@ -462,6 +462,14 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">java8</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">stream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">mysql</a>
               </li>
              
@@ -482,6 +490,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">效率</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
@@ -494,15 +506,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">效率</a>
+                <a href="javascript:void(0)" class="js-tag color5">几何距离</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搜索排序</a>
+                <a href="javascript:void(0)" class="js-tag color4">统计学</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">集体智慧编程</a>
+                <a href="javascript:void(0)" class="js-tag color4">云跟帖</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -518,15 +530,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">云跟帖</a>
+                <a href="javascript:void(0)" class="js-tag color5">搜索排序</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">几何距离</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">统计学</a>
+                <a href="javascript:void(0)" class="js-tag color2">集体智慧编程</a>
               </li>
             
             <div class="clearfix"></div>
