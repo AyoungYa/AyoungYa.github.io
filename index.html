@@ -65,9 +65,7 @@ var _hmt = _hmt || [];
 			
 				<li><a href="/">主页</a></li>
 	        
-				<li><a href="/categories/machingLearning/">机器学习</a></li>
-	        
-				<li><a href="/categories/visualization/">数据可视化</a></li>
+				<li><a href="/categories/machineLearning/">机器学习</a></li>
 	        
 				<li><a href="/categories/系统开发/">系统开发</a></li>
 	        
@@ -129,8 +127,6 @@ var _hmt = _hmt || [];
 			
 				
 			
-				
-			
 			
 			
 			<nav class="header-nav">
@@ -149,15 +145,13 @@ var _hmt = _hmt || [];
 				<ul style="width: 70%">
 				
 				
-					<li style="width: 20%"><a href="/">主页</a></li>
+					<li style="width: 25%"><a href="/">主页</a></li>
 		        
-					<li style="width: 20%"><a href="/categories/machingLearning/">机器学习</a></li>
+					<li style="width: 25%"><a href="/categories/machineLearning/">机器学习</a></li>
 		        
-					<li style="width: 20%"><a href="/categories/visualization/">数据可视化</a></li>
+					<li style="width: 25%"><a href="/categories/系统开发/">系统开发</a></li>
 		        
-					<li style="width: 20%"><a href="/categories/系统开发/">系统开发</a></li>
-		        
-					<li style="width: 20%"><a href="/categories/blog/">Blog</a></li>
+					<li style="width: 25%"><a href="/categories/blog/">Blog</a></li>
 		        
 				</ul>
 			</nav>
@@ -254,59 +248,6 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-Java-集合类初始化-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/undefined/Java-集合类初始化-1/">Java-集合类初始化</a>
-    </h1>
-  
-
-        
-        <a href="/undefined/Java-集合类初始化-1/" class="archive-article-date">
-  	<time datetime="2017-09-08T04:47:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/undefined/Java-集合类初始化-1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-Java-集合类初始化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -329,7 +270,8 @@ var _hmt = _hmt || [];
       
         <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在开发过程中，遇到一些Java集合类的初始化问题，在这里做个简单的总结。</p>
 <hr>
-<h1 id="集合类"><a href="#集合类" class="headerlink" title="集合类"></a>集合类</h1><hr>
+<!-- # 集合类 -->
+<hr>
 <h1 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h1><p>假设有如下类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Demo</span><span class="params">(<span class="keyword">int</span> id, String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.id = id;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> StringBuffer sb = <span class="keyword">new</span> StringBuffer(<span class="string">"Demo&#123;"</span>);</div><div class="line">        sb.append(<span class="string">"id="</span>).append(id);</div><div class="line">        sb.append(<span class="string">", name='"</span>).append(name).append(<span class="string">'\''</span>);</div><div class="line">        sb.append(<span class="string">'&#125;'</span>);</div><div class="line">        <span class="keyword">return</span> sb.toString();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h2><h4 id="方法1-基本初始化方法"><a href="#方法1-基本初始化方法" class="headerlink" title="方法1. 基本初始化方法"></a>方法1. 基本初始化方法</h4><blockquote>
 <p>初始化一个List，里面包含两个Demo对象</p>
@@ -351,6 +293,13 @@ var _hmt = _hmt || [];
 <p>这种方法只适用于不是final的类，因为final类是无法建立内部匿名子类，好在集合类都没有这个限制。</p>
 </blockquote>
 <h4 id="方法4-Arrays-as使用"><a href="#方法4-Arrays-as使用" class="headerlink" title="方法4. Arrays.as使用"></a>方法4. Arrays.as使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initMethod4</span><span class="params">()</span></span>&#123;</div><div class="line">        Demo demo7 = <span class="keyword">new</span> Demo(<span class="number">7</span>, <span class="string">"Iphone"</span>);</div><div class="line">        Demo demo8 = <span class="keyword">new</span> Demo(<span class="number">6</span>, <span class="string">"Samsung"</span>);</div><div class="line">        List&lt;Demo&gt; demos = Arrays.asList(demo7, demo8);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>该方法是array和list之间的转换API，和Collection.toArray方法相呼应。<br>使用该方法初始化的List需要注意以下：</p>
+<ul>
+<li>Arrays.asList生成的对象是Arrays的内部类ArrayList对象，不是java.util.ArrayList，该内部类只实现了List的部分方法，而没有实现add、remove，因此如果需要对例子中的demos进行add、remove操作时会报UnsupportedOperationException。</li>
+<li>使用Arrays.asList有可能会出现类型转换的错误，转换后的结果不是想要的，如下<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span>[] intA = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</div><div class="line">    List listA = Arrays.asList(intA);</div><div class="line">    System.out.println(<span class="string">"listA type: "</span> + listA.getClass());</div><div class="line">    System.out.println(<span class="string">"listA ele type: "</span> + listA.get(<span class="number">0</span>).getClass());</div><div class="line"></div><div class="line">    Integer[] integerB = <span class="keyword">new</span> Integer[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</div><div class="line">    List bList1 = Arrays.asList(integerB);</div><div class="line">    System.out.println(<span class="string">"bList1 type: "</span> + bList1.getClass());</div><div class="line">    System.out.println(<span class="string">"bList1 ele type: "</span> + bList1.get(<span class="number">0</span>).getClass());</div><div class="line"></div><div class="line">    List&lt;Integer&gt; bList2 = Arrays.asList(integerB);</div><div class="line">    System.out.println(<span class="string">"bList2 type: "</span> + bList2.getClass());</div><div class="line">    System.out.println(<span class="string">"bList2 ele type: "</span> + bList2.get(<span class="number">0</span>).getClass());</div><div class="line">&#125;</div><div class="line"><span class="comment">/** output</span></div><div class="line">* listA type: class java.util.Arrays$ArrayList</div><div class="line">* listA ele type: class [I</div><div class="line">* bList1 type: class java.util.Arrays$ArrayList</div><div class="line">* bList1 ele type: class java.lang.Integer</div><div class="line">* bList2 type: class java.util.Arrays$ArrayList</div><div class="line">* bList2 ele type: class java.lang.Integer</div><div class="line">*/</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>其原因是Arrays.asList(T… a)接受变长参数导致的。<br><strong>在使用Arrays.asList时指定返回值类型可以避免一些引起的问题</strong></p>
 <h4 id="方法5-Stream的使用"><a href="#方法5-Stream的使用" class="headerlink" title="方法5. Stream的使用"></a>方法5. Stream的使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initMethod4</span><span class="params">()</span></span>&#123;</div><div class="line">        Demo demo7 = <span class="keyword">new</span> Demo(<span class="number">7</span>, <span class="string">"Iphone"</span>);</div><div class="line">        Demo demo8 = <span class="keyword">new</span> Demo(<span class="number">6</span>, <span class="string">"Samsung"</span>);</div><div class="line">        List&lt;Demo&gt; demos = Stream.of(demo7, demo8).collect(Collectors.toList());</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <h4 id="方法6-集合类方法的使用"><a href="#方法6-集合类方法的使用" class="headerlink" title="方法6. 集合类方法的使用"></a>方法6. 集合类方法的使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initMethod7</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">int</span> size = <span class="number">100</span>;</div><div class="line">        <span class="keyword">int</span> defaultValue = <span class="number">0</span>;</div><div class="line">        List&lt;Integer&gt; integerList = Collections.nCopies(size, defaultValue);</div><div class="line"></div><div class="line">        List&lt;Demo&gt; demos = Collections.nCopies(size, <span class="keyword">new</span> Demo(<span class="number">0</span>, <span class="string">""</span>));</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <h4 id="方法7-Stream-generate方法的使用"><a href="#方法7-Stream-generate方法的使用" class="headerlink" title="方法7. Stream generate方法的使用"></a>方法7. Stream generate方法的使用</h4><h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><hr>
@@ -754,7 +703,7 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/machingLearning/" class="article-tag-list-link color1">machingLearning</a>
+        			<a href="/categories/machineLearning/" class="article-tag-list-link color1">machineLearning</a>
         		</li>
       		
 		</ul>
@@ -791,12 +740,12 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/machingLearning/集体智慧编程--概率与统计学中的一些基本概念/">集体智慧编程--概率与统计学中的一些基本概念</a>
+      <a class="article-title" href="/machineLearning/集体智慧编程--概率与统计学中的一些基本概念/">集体智慧编程--概率与统计学中的一些基本概念</a>
     </h1>
   
 
         
-        <a href="/machingLearning/集体智慧编程--概率与统计学中的一些基本概念/" class="archive-article-date">
+        <a href="/machineLearning/集体智慧编程--概率与统计学中的一些基本概念/" class="archive-article-date">
   	<time datetime="2017-04-27T16:02:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-28</time>
 </a>
         
@@ -846,7 +795,7 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/machingLearning/" class="article-tag-list-link color1">machingLearning</a>
+        			<a href="/categories/machineLearning/" class="article-tag-list-link color1">machineLearning</a>
         		</li>
       		
 		</ul>
@@ -855,7 +804,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/machingLearning/集体智慧编程--概率与统计学中的一些基本概念/">展开全文 >></a>
+          <a class="article-more-a" href="/machineLearning/集体智慧编程--概率与统计学中的一些基本概念/">展开全文 >></a>
         </p>
       
 
@@ -958,7 +907,7 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/machingLearning/" class="article-tag-list-link color1">machingLearning</a>
+        			<a href="/categories/machineLearning/" class="article-tag-list-link color1">machineLearning</a>
         		</li>
       		
 		</ul>
@@ -995,12 +944,12 @@ var _hmt = _hmt || [];
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/machingLearning/概率论-蒙特霍尔悖论/">概率论--蒙特霍尔悖论</a>
+      <a class="article-title" href="/machineLearning/概率论-蒙特霍尔悖论/">概率论--蒙特霍尔悖论</a>
     </h1>
   
 
         
-        <a href="/machingLearning/概率论-蒙特霍尔悖论/" class="archive-article-date">
+        <a href="/machineLearning/概率论-蒙特霍尔悖论/" class="archive-article-date">
   	<time datetime="2017-04-18T12:00:32.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-18</time>
 </a>
         
@@ -1057,7 +1006,7 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/machingLearning/" class="article-tag-list-link color1">machingLearning</a>
+        			<a href="/categories/machineLearning/" class="article-tag-list-link color1">machineLearning</a>
         		</li>
       		
 		</ul>
@@ -1066,7 +1015,155 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/machingLearning/概率论-蒙特霍尔悖论/">展开全文 >></a>
+          <a class="article-more-a" href="/machineLearning/概率论-蒙特霍尔悖论/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-基于Github的个人博客搭建" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/基于Github的个人博客搭建/">基于Github的个人博客搭建</a>
+    </h1>
+  
+
+        
+        <a href="/blog/基于Github的个人博客搭建/" class="archive-article-date">
+  	<time datetime="2017-04-06T13:31:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>&#160; &#160; &#160; &#160;出于兴趣或者其他原因，我们都期望搭一个个性化的个人博客，对比各种其他方式，通过<a href="https://hexo.io/zh-cn/" target="_blank" rel="external">Hexo</a> + <a href="https://github.com/" target="_blank" rel="external">Github</a>搭建一套博客系统是投入产出比最大的方式了。本文将介绍如何利用这两种工具搭建一个属于自己的博客。Let’s start right now!</p>
+<h3 id="1-基本资源准备"><a href="#1-基本资源准备" class="headerlink" title="1. 基本资源准备"></a>1. 基本资源准备</h3><h4 id="1-1-本地电脑配置"><a href="#1-1-本地电脑配置" class="headerlink" title="1.1 本地电脑配置"></a>1.1 本地电脑配置</h4><ul>
+<li><a href="https://git-scm.com/" target="_blank" rel="external">Git</a>, 一个开源的版本控制器，在这里主要是控制博客的内容以及用于将内容推送到远端的Github上或者其他代码托管平台. Window版提供客户端和shell两种版本<a href="https://git-for-windows.github.io/" target="_blank" rel="external">下载地址</a>, 安装过程可参看百度经验或者<a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137396287703354d8c6c01c904c7d9ff056ae23da865a000" target="_blank" rel="external">其他博客</a>。</li>
+<li><a href="https://nodejs.org/en/" target="_blank" rel="external">Node.js</a>: 整个博客的语言环境，这里的语言指的是编程语言（是不是有点啰嗦呢^_^）。</li>
+<li><a href="https://hexo.io/zh-cn/" target="_blank" rel="external">Hexo</a>: 整个博客系统的核心部件，负责运转整个系统包括博客的初始化，外观的渲染，博客内容的添加…。</li>
+</ul>
+<h4 id="1-2-网络资源申请"><a href="#1-2-网络资源申请" class="headerlink" title="1.2 网络资源申请"></a>1.2 网络资源申请</h4><ul>
+<li><a href="https://github.com/" target="_blank" rel="external">Github</a>账号的申请及本地的初始化<a href="http://www.runoob.com/w3cnote/git-guide.html" target="_blank" rel="external">Github简明教程(非官方)</a>。</li>
+<li>域名 非必需，基于github配置好之后的地址样式如 <code>your_github_name.github.io</code>. 如果想让自己的博客又一个比较个性化的地址， 可以申请一个。</li>
+</ul>
+<h3 id="2-Start"><a href="#2-Start" class="headerlink" title="2. Start"></a>2. Start</h3><p>在网上已经有大量的基本的配置教程，这里就不再详细叙述了，用户可以自行百度或者Google安装，相关的关键词主要有：hexo、静态博客搭建等。</p>
+<h3 id="3-个性化定制"><a href="#3-个性化定制" class="headerlink" title="3. 个性化定制"></a>3. 个性化定制</h3><h4 id="3-1-自定义主题"><a href="#3-1-自定义主题" class="headerlink" title="3.1 自定义主题"></a>3.1 自定义主题</h4><ol>
+<li>首先选择喜欢的主题，参看网上的一些主题库：<a href="https://hexo.io/themes/" target="_blank" rel="external">官方主题</a>, <a href="https://www.zhihu.com/question/24422335?sort=created&amp;page=2" target="_blank" rel="external">知乎上的回答</a></li>
+<li>将选择的主题下到本地，然后放到主文件夹的<code>thems</code>目录下;</li>
+<li>找到博客的<code>_config.yml</code>文件，设置<code>theme:</code>为当前的主题;</li>
+<li>找到自定义主题的<code>_config.yml</code>文件，进行个性化定制即可。</li>
+</ol>
+<h4 id="3-2-个性化头像"><a href="#3-2-个性化头像" class="headerlink" title="3.2 个性化头像"></a>3.2 个性化头像</h4><p>设置自己的头像一般是根据主题不同而会略有差异，在这里以我所使用的yilia主题为例。头像图片可以放置在两个地方：一个是网上的图床，你可以选择一个图床将博客中所有的图片都放在里面，然后在博客中只需要插上对应的链接即可；另外一种是放到博客的文件夹中并上传到Github上，一般是在<code>source/img</code>文件夹中，如果没有则新建一个即可。</p>
+<ol>
+<li>在这里我们先把头像图片放到<code>source/img</code>中；</li>
+<li>找到yilia主题的<code>_config.yml</code>的<code>avatar</code>字段，设置值为<code>img/header.jpg</code></li>
+<li>本地重启Hexo，应该可以看到自定义的头像；执行<code>hexo clean; hexo g -d</code>部署到线上即可。</li>
+</ol>
+<h4 id="3-3-添加评论功能"><a href="#3-3-添加评论功能" class="headerlink" title="3.3 添加评论功能"></a>3.3 添加评论功能</h4><p>&#160; &#160; &#160; &#160;对于Yilia主题，主流支持的第三方评论是多说和Disqus，不幸的是这两个在国内逐渐不好用了。首先是多说，它是国内比较好的第三方评论系统但是在2017年6月即将关闭，这对于众多的多说用户来说都是一个不小的迁移工作，所以我们这里不采用多说；Disqus也不推荐，因为它已经被关在墙外面了:( 其他的评论系统有搜狐的畅言、网易的云跟帖、有言等等。 个人感觉畅言的视觉效果不如云跟帖和有言，因此选择了云跟帖作为本博客的评论。添加的过程如下：</p>
+<ol>
+<li>在网易的<a href="https://gentie.163.com/index.html" target="_blank" rel="external">云跟帖</a>中进行账号的注册和相关信息的补充以及样式选择。</li>
+<li>然后在获取代码页面copy对应的js代码，如下图所示</li>
+</ol>
+<p><div align="center"><br>    <img src="/img/wangyin_yungentie.jpg" width="55%"><br></div></p>
+<ol>
+<li>找到<code>thems/yilia/layout/post/duoshuo.ejs</code>,用刚才的代码覆盖原有的代码，之后的代码如下：</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"duoshuo"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"cloud-tie-wrapper"</span> <span class="attr">class</span>=<span class="string">"cloud-tie-wrapper"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">	  var cloudTieConfig = &#123;</div><div class="line">	    url: document.location.href, </div><div class="line">	    sourceId: "",</div><div class="line">	    productKey: "your_key_is_here",</div><div class="line">	    target: "cloud-tie-wrapper"</div><div class="line">	  &#125;;</div><div class="line">	<span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<ol>
+<li>在yilia的<code>_config.yml</code>中设置<code>duoshuo: true</code></li>
+<li>在需要评论的文章Front-matter部分设置 <code>comments: true</code></li>
+<li>重新deploy到线上即可看到想要的评论框了。</li>
+</ol>
+<p>2017-04-20<br>Remark：当前评论存在的问题是对一篇文章进行评论后发现其他的文章也有这条评论了，也就是评论混淆了。需要重点解决</p>
+<h4 id="3-4-自定义文章分类"><a href="#3-4-自定义文章分类" class="headerlink" title="3.4 自定义文章分类"></a>3.4 自定义文章分类</h4><blockquote>
+<ul>
+<li>Hexo的文件夹功能其实是一个类似文件链接的功能，所有的已发表的文章均放在<code>source/_posts</code>文件夹下面，如果需要分类到不同的类别下，可以通过Hexo自带的类别功能进行分类。大概步骤可以参看<a href="https://www.zhihu.com/question/33324071" target="_blank" rel="external">知乎的回答</a></li>
+</ul>
+</blockquote>
+<h4 id="3-5-添加百度统计功能"><a href="#3-5-添加百度统计功能" class="headerlink" title="3.5 添加百度统计功能"></a>3.5 添加百度统计功能</h4><p>百度的统计功能安装比较简单，只要进行下面几步就好了</p>
+<ol>
+<li>注册<a href="https://tongji.baidu.com/web/welcome/login" target="_blank" rel="external">百度统计</a>的账号并补充对应的信息.</li>
+<li><p>找到代码对应的key，并把这个Key粘贴到yillia的<code>_config.yml</code>的<code>baidu_analytics</code>字段中</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">	<span class="keyword">var</span> _hmt = _hmt || [];</div><div class="line">	(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		  <span class="keyword">var</span> hm = <span class="built_in">document</span>.createElement(<span class="string">"script"</span>);</div><div class="line">		  hm.src = <span class="string">"https://hm.baidu.com/hm.js?your_key_is"</span>; <span class="comment">//Here is your key</span></div><div class="line">		  <span class="keyword">var</span> s = <span class="built_in">document</span>.getElementsByTagName(<span class="string">"script"</span>)[<span class="number">0</span>]; </div><div class="line">		  s.parentNode.insertBefore(hm, s);</div><div class="line">	&#125;)();</div><div class="line"><span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></div></pre></td></tr></table></figure>
+</li>
+<li><p>执行<code>hexo clean; hexo g -d</code>命令重新部署Hexo，稍等一会进行百度统计代码安装检查（前面的百度统计页面）</p>
+</li>
+</ol>
+<h3 id="开始你的Blog"><a href="#开始你的Blog" class="headerlink" title="开始你的Blog"></a>开始你的Blog</h3><ol>
+<li><code>hexo new post blog_name</code>，然后在<code>source/_posts</code>下面找到对应的md格式文档进行编辑即可。</li>
+<li>对于文档的编辑，可以参看Hexo的<a href="https://hexo.io/zh-cn/docs/writing.html" target="_blank" rel="external">官方教程</a>.</li>
+</ol>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ul>
+<li><a href="https://hexo.io/zh-cn/" target="_blank" rel="external">Hexo</a></li>
+<li><a href="https://www.zhihu.com/question/33324071" target="_blank" rel="external">知乎的回答</a></li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Hexo</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Github</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Blog</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">云跟帖</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/blog/" class="article-tag-list-link color5">blog</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/blog/基于Github的个人博客搭建/">展开全文 >></a>
         </p>
       
 
@@ -1101,7 +1198,7 @@ var _hmt = _hmt || [];
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2017 小豆豆
+    		&copy; 2018 小豆豆
     	</div>
     </div>
   </div>
@@ -1214,10 +1311,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
@@ -1227,6 +1320,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">学习资料</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1250,6 +1347,14 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">几何距离</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">统计学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">蒙特霍尔</a>
               </li>
              
@@ -1259,14 +1364,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">概率论</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">几何距离</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">统计学</a>
               </li>
              
               <li class="article-tag-list-item">

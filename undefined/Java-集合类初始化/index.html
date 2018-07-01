@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://www.ayoungya.com">
   <title>Java-集合类初始化及相互转换 | 润泽大地</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="问题在开发过程中，遇到一些Java集合类的初始化问题，在这里做个简单的总结。  集合类 初始化假设有如下类123456789101112131415161718public class Demo &amp;#123;    private int id;    private String name;    public Demo(int id, String name) &amp;#123;        th">
+  <meta name="description" content="问题在开发过程中，遇到一些Java集合类的初始化问题，在这里做个简单的总结。    初始化假设有如下类123456789101112131415161718public class Demo &amp;#123;    private int id;    private String name;    public Demo(int id, String name) &amp;#123;        this">
 <meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java-集合类初始化及相互转换">
 <meta property="og:url" content="http://www.ayoungya.com/undefined/Java-集合类初始化/index.html">
 <meta property="og:site_name" content="润泽大地">
-<meta property="og:description" content="问题在开发过程中，遇到一些Java集合类的初始化问题，在这里做个简单的总结。  集合类 初始化假设有如下类123456789101112131415161718public class Demo &amp;#123;    private int id;    private String name;    public Demo(int id, String name) &amp;#123;        th">
+<meta property="og:description" content="问题在开发过程中，遇到一些Java集合类的初始化问题，在这里做个简单的总结。    初始化假设有如下类123456789101112131415161718public class Demo &amp;#123;    private int id;    private String name;    public Demo(int id, String name) &amp;#123;        this">
 <meta property="og:locale" content="zh-guoyu">
-<meta property="og:updated_time" content="2017-09-08T06:38:58.000Z">
+<meta property="og:updated_time" content="2018-07-01T05:07:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java-集合类初始化及相互转换">
-<meta name="twitter:description" content="问题在开发过程中，遇到一些Java集合类的初始化问题，在这里做个简单的总结。  集合类 初始化假设有如下类123456789101112131415161718public class Demo &amp;#123;    private int id;    private String name;    public Demo(int id, String name) &amp;#123;        th">
+<meta name="twitter:description" content="问题在开发过程中，遇到一些Java集合类的初始化问题，在这里做个简单的总结。    初始化假设有如下类123456789101112131415161718public class Demo &amp;#123;    private int id;    private String name;    public Demo(int id, String name) &amp;#123;        this">
   
     <link rel="alternative" href="/atom.xml" title="润泽大地" type="application/atom+xml">
   
@@ -70,9 +70,7 @@ var _hmt = _hmt || [];
 			
 				<li><a href="/">主页</a></li>
 	        
-				<li><a href="/categories/machingLearning/">机器学习</a></li>
-	        
-				<li><a href="/categories/visualization/">数据可视化</a></li>
+				<li><a href="/categories/machineLearning/">机器学习</a></li>
 	        
 				<li><a href="/categories/系统开发/">系统开发</a></li>
 	        
@@ -134,8 +132,6 @@ var _hmt = _hmt || [];
 			
 				
 			
-				
-			
 			
 			
 			<nav class="header-nav">
@@ -154,15 +150,13 @@ var _hmt = _hmt || [];
 				<ul style="width: 70%">
 				
 				
-					<li style="width: 20%"><a href="/">主页</a></li>
+					<li style="width: 25%"><a href="/">主页</a></li>
 		        
-					<li style="width: 20%"><a href="/categories/machingLearning/">机器学习</a></li>
+					<li style="width: 25%"><a href="/categories/machineLearning/">机器学习</a></li>
 		        
-					<li style="width: 20%"><a href="/categories/visualization/">数据可视化</a></li>
+					<li style="width: 25%"><a href="/categories/系统开发/">系统开发</a></li>
 		        
-					<li style="width: 20%"><a href="/categories/系统开发/">系统开发</a></li>
-		        
-					<li style="width: 20%"><a href="/categories/blog/">Blog</a></li>
+					<li style="width: 25%"><a href="/categories/blog/">Blog</a></li>
 		        
 				</ul>
 			</nav>
@@ -199,7 +193,8 @@ var _hmt = _hmt || [];
       
         <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在开发过程中，遇到一些Java集合类的初始化问题，在这里做个简单的总结。</p>
 <hr>
-<h1 id="集合类"><a href="#集合类" class="headerlink" title="集合类"></a>集合类</h1><hr>
+<!-- # 集合类 -->
+<hr>
 <h1 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h1><p>假设有如下类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Demo</span><span class="params">(<span class="keyword">int</span> id, String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.id = id;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> StringBuffer sb = <span class="keyword">new</span> StringBuffer(<span class="string">"Demo&#123;"</span>);</div><div class="line">        sb.append(<span class="string">"id="</span>).append(id);</div><div class="line">        sb.append(<span class="string">", name='"</span>).append(name).append(<span class="string">'\''</span>);</div><div class="line">        sb.append(<span class="string">'&#125;'</span>);</div><div class="line">        <span class="keyword">return</span> sb.toString();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h2><h4 id="方法1-基本初始化方法"><a href="#方法1-基本初始化方法" class="headerlink" title="方法1. 基本初始化方法"></a>方法1. 基本初始化方法</h4><blockquote>
 <p>初始化一个List，里面包含两个Demo对象</p>
@@ -221,6 +216,13 @@ var _hmt = _hmt || [];
 <p>这种方法只适用于不是final的类，因为final类是无法建立内部匿名子类，好在集合类都没有这个限制。</p>
 </blockquote>
 <h4 id="方法4-Arrays-as使用"><a href="#方法4-Arrays-as使用" class="headerlink" title="方法4. Arrays.as使用"></a>方法4. Arrays.as使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initMethod4</span><span class="params">()</span></span>&#123;</div><div class="line">        Demo demo7 = <span class="keyword">new</span> Demo(<span class="number">7</span>, <span class="string">"Iphone"</span>);</div><div class="line">        Demo demo8 = <span class="keyword">new</span> Demo(<span class="number">6</span>, <span class="string">"Samsung"</span>);</div><div class="line">        List&lt;Demo&gt; demos = Arrays.asList(demo7, demo8);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>该方法是array和list之间的转换API，和Collection.toArray方法相呼应。<br>使用该方法初始化的List需要注意以下：</p>
+<ul>
+<li>Arrays.asList生成的对象是Arrays的内部类ArrayList对象，不是java.util.ArrayList，该内部类只实现了List的部分方法，而没有实现add、remove，因此如果需要对例子中的demos进行add、remove操作时会报UnsupportedOperationException。</li>
+<li>使用Arrays.asList有可能会出现类型转换的错误，转换后的结果不是想要的，如下<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span>[] intA = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</div><div class="line">    List listA = Arrays.asList(intA);</div><div class="line">    System.out.println(<span class="string">"listA type: "</span> + listA.getClass());</div><div class="line">    System.out.println(<span class="string">"listA ele type: "</span> + listA.get(<span class="number">0</span>).getClass());</div><div class="line"></div><div class="line">    Integer[] integerB = <span class="keyword">new</span> Integer[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</div><div class="line">    List bList1 = Arrays.asList(integerB);</div><div class="line">    System.out.println(<span class="string">"bList1 type: "</span> + bList1.getClass());</div><div class="line">    System.out.println(<span class="string">"bList1 ele type: "</span> + bList1.get(<span class="number">0</span>).getClass());</div><div class="line"></div><div class="line">    List&lt;Integer&gt; bList2 = Arrays.asList(integerB);</div><div class="line">    System.out.println(<span class="string">"bList2 type: "</span> + bList2.getClass());</div><div class="line">    System.out.println(<span class="string">"bList2 ele type: "</span> + bList2.get(<span class="number">0</span>).getClass());</div><div class="line">&#125;</div><div class="line"><span class="comment">/** output</span></div><div class="line">* listA type: class java.util.Arrays$ArrayList</div><div class="line">* listA ele type: class [I</div><div class="line">* bList1 type: class java.util.Arrays$ArrayList</div><div class="line">* bList1 ele type: class java.lang.Integer</div><div class="line">* bList2 type: class java.util.Arrays$ArrayList</div><div class="line">* bList2 ele type: class java.lang.Integer</div><div class="line">*/</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>其原因是Arrays.asList(T… a)接受变长参数导致的。<br><strong>在使用Arrays.asList时指定返回值类型可以避免一些引起的问题</strong></p>
 <h4 id="方法5-Stream的使用"><a href="#方法5-Stream的使用" class="headerlink" title="方法5. Stream的使用"></a>方法5. Stream的使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initMethod4</span><span class="params">()</span></span>&#123;</div><div class="line">        Demo demo7 = <span class="keyword">new</span> Demo(<span class="number">7</span>, <span class="string">"Iphone"</span>);</div><div class="line">        Demo demo8 = <span class="keyword">new</span> Demo(<span class="number">6</span>, <span class="string">"Samsung"</span>);</div><div class="line">        List&lt;Demo&gt; demos = Stream.of(demo7, demo8).collect(Collectors.toList());</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <h4 id="方法6-集合类方法的使用"><a href="#方法6-集合类方法的使用" class="headerlink" title="方法6. 集合类方法的使用"></a>方法6. 集合类方法的使用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initMethod7</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">int</span> size = <span class="number">100</span>;</div><div class="line">        <span class="keyword">int</span> defaultValue = <span class="number">0</span>;</div><div class="line">        List&lt;Integer&gt; integerList = Collections.nCopies(size, defaultValue);</div><div class="line"></div><div class="line">        List&lt;Demo&gt; demos = Collections.nCopies(size, <span class="keyword">new</span> Demo(<span class="number">0</span>, <span class="string">""</span>));</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <h4 id="方法7-Stream-generate方法的使用"><a href="#方法7-Stream-generate方法的使用" class="headerlink" title="方法7. Stream generate方法的使用"></a>方法7. Stream generate方法的使用</h4><h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><hr>
@@ -322,11 +324,11 @@ var _hmt = _hmt || [];
   
 <nav id="article-nav">
   
-    <a href="/undefined/Java-集合类初始化-1/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/undefined/Excel打开代码生成CSV文件数字科学计数法显示问题/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          Java-集合类初始化
+          Excel打开代码生成CSV文件数字科学计数法显示问题
         
       </div>
     </a>
@@ -385,7 +387,7 @@ var _hmt = _hmt || [];
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2017 小豆豆
+    		&copy; 2018 小豆豆
     	</div>
     </div>
   </div>
@@ -498,10 +500,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
@@ -511,6 +509,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">学习资料</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -534,6 +536,14 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">几何距离</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">统计学</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">蒙特霍尔</a>
               </li>
              
@@ -543,14 +553,6 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">概率论</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">几何距离</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">统计学</a>
               </li>
              
               <li class="article-tag-list-item">
