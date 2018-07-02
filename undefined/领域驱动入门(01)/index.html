@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="润泽大地">
 <meta property="og:description" content="本系列博客希望以Vaughn Vernon的《实现领域驱动设计》为参考，入坑领域驱动设计。 一、什么是领域驱动设计领域驱动设计(Domain Drive Design, DDD)是软件开发的一种方法，旨在帮助我们设计开发可测试、可伸缩、组织良好的软件模型。 DDD并不是画模型图，而是将领域专家的思维模型转化成有用的业务模型;DDD不是创建一个真实世界的模型，而是模仿现实。 二、DDD的价值业务价值">
 <meta property="og:locale" content="zh-guoyu">
-<meta property="og:updated_time" content="2017-09-07T13:10:50.000Z">
+<meta property="og:updated_time" content="2018-07-02T14:42:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="领域驱动入门(01)">
 <meta name="twitter:description" content="本系列博客希望以Vaughn Vernon的《实现领域驱动设计》为参考，入坑领域驱动设计。 一、什么是领域驱动设计领域驱动设计(Domain Drive Design, DDD)是软件开发的一种方法，旨在帮助我们设计开发可测试、可伸缩、组织良好的软件模型。 DDD并不是画模型图，而是将领域专家的思维模型转化成有用的业务模型;DDD不是创建一个真实世界的模型，而是模仿现实。 二、DDD的价值业务价值">
@@ -216,36 +216,28 @@ var _hmt = _hmt || [];
 </li>
 </ul>
 <hr>
-<h2 id="四、关键概念"><a href="#四、关键概念" class="headerlink" title="四、关键概念"></a>四、关键概念</h2><ol>
-<li><h4 id="领域"><a href="#领域" class="headerlink" title="领域"></a>领域</h4><p>广义上来讲，<strong>领域</strong>指一个组织所做的事情及其中所包含的一切。领域既可以表示整个业务系统，又可以表示其中的某个核心域或者支撑子域。</p>
-<ol>
-<li><h5 id="子域"><a href="#子域" class="headerlink" title="子域"></a>子域</h5></li>
-<li><h5 id="核心域"><a href="#核心域" class="headerlink" title="核心域"></a>核心域</h5></li>
-</ol>
-</li>
-<li><h4 id="限界上下文"><a href="#限界上下文" class="headerlink" title="限界上下文"></a>限界上下文</h4></li>
-<li><h4 id="领域事件"><a href="#领域事件" class="headerlink" title="领域事件"></a>领域事件</h4></li>
-<li><h4 id="通用语言"><a href="#通用语言" class="headerlink" title="通用语言"></a>通用语言</h4><ul>
+<h2 id="四、关键概念"><a href="#四、关键概念" class="headerlink" title="四、关键概念"></a>四、关键概念</h2><h4 id="1-领域"><a href="#1-领域" class="headerlink" title="1. 领域"></a>1. 领域</h4><p>   广义上来讲，<strong>领域</strong>指一个组织所做的事情及其中所包含的一切。领域既可以表示整个业务系统，又可以表示其中的某个核心域或者支撑子域。</p>
+<h5 id="1-子域"><a href="#1-子域" class="headerlink" title="1. 子域"></a>1. 子域</h5><h5 id="2-核心域"><a href="#2-核心域" class="headerlink" title="2. 核心域"></a>2. 核心域</h5><h4 id="2-限界上下文"><a href="#2-限界上下文" class="headerlink" title="2. 限界上下文"></a>2. 限界上下文</h4><h4 id="3-领域事件"><a href="#3-领域事件" class="headerlink" title="3. 领域事件"></a>3. 领域事件</h4><h4 id="4-通用语言"><a href="#4-通用语言" class="headerlink" title="4. 通用语言"></a>4. 通用语言</h4><ul>
 <li>团队的共享语言，“同一个团队，同一种语言”。</li>
 <li>关于业务本身如何思考和运作的。</li>
-<li>团队交流和代码才是对通用语言的持续表达。</li>
-</ul>
+<li><p>团队交流和代码才是对通用语言的持续表达。</p>
 <p><strong>1).如何掌握通用语言</strong></p>
+</li>
+</ul>
 <ol>
 <li>同时绘制物理模型图和概念模型图，并标以名字和行为;</li>
 <li>创建一个包含简单定义的术语表;</li>
 <li>采用其他类型的文档，将涉及到的模型包含，得到通用语言的术语和词组;</li>
-<li>与其他成员套路通用语言并修正。</li>
-</ol>
+<li><p>与其他成员套路通用语言并修正。</p>
 <p><strong>2). 通用语言注意点</strong></p>
+</li>
+</ol>
 <ul>
 <li>通用是在团队范围内使用，并且只表达一个单一的领域模型;</li>
 <li>通用语言不代表全企业、全公司或者全球性的领域语言; </li>
 <li>限界上下文和通用语言是一对一的关系;</li>
 <li>限界上下文是一个相对较小的概念。</li>
 </ul>
-</li>
-</ol>
 <h2 id="五、Example"><a href="#五、Example" class="headerlink" title="五、Example"></a>五、Example</h2><p>后续将使用一套虚拟的产品介绍DDD的使用。</p>
 <h2 id="六、参考"><a href="#六、参考" class="headerlink" title="六、参考"></a>六、参考</h2><ul>
 <li><a href="http://www.cnblogs.com/netfocus/archive/2011/10/10/2204949.html" target="_blank" rel="external">DDD领域驱动设计基本理论知识总结</a></li>
@@ -520,6 +512,10 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">机器学习</a>
               </li>
              
@@ -556,14 +552,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">几何距离</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">统计学</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">蒙特霍尔</a>
               </li>
              
@@ -581,6 +569,14 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">集体智慧编程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">几何距离</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">统计学</a>
               </li>
              
               <li class="article-tag-list-item">
