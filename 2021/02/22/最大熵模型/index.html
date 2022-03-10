@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="Hexo, Gruntjs, Nodejs, Reactjs, Vuejs" />
+  <meta name="author" content="小豆豆" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      最大熵模型 
+      
+      
+      |
+    
+     MyAmazingGarden
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Oranges</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">Friends</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">最大熵模型</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2021-02-22 15:29:17
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">
+                    <b>#</b> 笔记
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" title="机器学习">
+                    <b>#</b> 机器学习
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" title="统计学习方法">
+                    <b>#</b> 统计学习方法
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>熵的相关概念，第一次在决策树那章做了简单介绍，但是要想正确理解熵的确实需要下一番功夫。这次，我们在最大熵模型这章继续来学习熵，理解熵在该模型中所扮演的角色。</p>
+<p>以一个问题开始我们的学习：机器学习的<strong>目的</strong>或者<strong>意义</strong>是什么？</p>
+<p>对于监督学习来说，我们希望通过现有获得的观测数据训练一个数据模型，然后来对未知类别样本和数据进行回归和分类预测。</p>
+<p>那么问题来了，什么样的模型才是比较好的模型呢？也许熵可以给我们提供了另一种特别的视角。</p>
+<p>好，让我们重新看一下熵的定义：</p>
+<p>\[ H(x) = - \sum_{x=1}^N P(x)log(P(x)) \]</p>
+<p>\[ 0 &lt;= H(x) &lt;= log|N|，右边等号成立当且仅当P(x)服从均匀分布 \]</p>
+<p>比如，一个抛硬币的实验，得到正反两面的概率分别都是0.5，相应系统的熵为1。也就是说，如果一个随机变量的分布确定之后，熵也就唯一确定了。假设这里的$P(x)$是我们随机变量的真实分布，因此这个熵是我们的下界，任何估计得到的数据分布的熵都应当大于等于它。</p>
+<p>那么，最大熵模型以及同样为指数模型的逻辑斯特回归模型究竟是怎么和熵联系起来的呢？为什么利用熵的约束可以使得我们训练的模型可以很好地表征观测数据。</p>
+<p>首先，让我们来看一下逻辑斯特回归所使用的交叉熵损失函数：</p>
+<p>\[ CE(x) = - \sum_{x=1}^N P(x)log(Q(x)) \]</p>
+<p>\[ H(x) &lt;= CE(x) , 等号成立当且仅当Q(x) = P(x) \]</p>
+<p>因此，通过优化最小$CE(x)$会使得$Q(x)$尽量逼近真实数据分布$P(x)$。噢，原来通过最小化交叉熵可以使得模型朝着我们想要的方向进行优化，表达训练样本啊！</p>
+<p>然后，我们再来看一下最大熵模型这边又是什么情况。</p>
+<p>经验告诉我们，对于已知事件可以通过极大似然估计来统计各个事件发生的概率，而对于未知事件一般做法是把剩余概率平均分给这些事件。比如，下面这个简单的例子：</p>
+<table>
+<thead>
+<tr>
+<th>概率/颜色</th>
+<th>红球</th>
+<th>绿球</th>
+<th>蓝球</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>P(x)</em></td>
+<td>3/5</td>
+<td>?<del>(1/5)</del></td>
+<td>?<del>(1/5)</del></td>
+</tr>
+</tbody></table>
+<p>为什么这样做？因为我们无法获得额外的信息来使得熵进一步减小，也可以说我们无法再做进一步的判断。</p>
+<p><strong>平均</strong>这个词生来就和熵有特殊的关系，我们知道当$P(x)$服从均匀分布时，系统的熵最大。</p>
+<p>我们的目标刚好就是使得未知事件的概率分布为均匀分布，也就是使这些未知事件的熵最大。通过这个约束得到的模型就不会对未知事件做任何假设，公平的对待它们，这就是最大熵的核心思想。</p>
+<p>先简单窥探一下最大熵模型中熵的引入定义：</p>
+<p>\[ H(x) = - \sum_{x,y} P^-(x)P(y|x)log(P(y|x)) \]</p>
+<p>注意，这里定义的是条件熵，$P(y|x)$是我们需要估计的目标分布。所以，优化上面的条件熵并使其最大，得到的最优模型就能实现我们公平的理想。当然，这种约束只应该尽量施加在未知样本上，而对于已知样本还需要做点什么，后面我们会继续探讨。</p>
+<p>可能这里有人会有一些疑问，比如：</p>
+<ol>
+<li><p>为什么都是熵， 怎么一下求最大值好，一下又求最小值好？</p>
+<p> 我们的最终目的都是希望模型最优，熵大熵小只是准则和途径。最终都是希望估计分布和真实分布趋于一致。</p>
+</li>
+<li><p>抛硬币是服从均匀分布，如果我们针对该问题学习到的模型也大致服从均匀分布是不是说明该模型不好，因为熵大？</p>
+<p> 我们只是希望估计分布的熵尽可能和真实分布的熵一致，而不是希望对真实分布做什么改变以求熵小。<br>举个栗子，我只是希望我画苹果像真实的苹果，而不是要求苹果像其它什么水果，比如香蕉（假设苹果的熵比香蕉的熵大）。</p>
+</li>
+</ol>
+<h2 id="最大熵模型"><a href="#最大熵模型" class="headerlink" title="最大熵模型"></a>最大熵模型</h2><p>上一节提到最大熵模型是怎么利用熵来约束未知事件的概率分布服从均匀分布。那已知事件或者说已知样本怎么处理呢？我们还必须让我们的模型能够很好的表示已知样本啊！好像缺了什么，对吧？</p>
+<p>是时候我们来看下最大熵代价损失函数：</p>
+<p>\[ H(x) = - \sum_{x,y} P^-(x)P(y|x)log(P(y|x)) \]</p>
+<p>\[ \sum_{x,y} P^-(x)P(y|x)f(x,y) = \sum_{x,y} P^-(x,y)f(x,y) \]</p>
+<p>\[ \sum_{y} P(y|x) = 1 \]</p>
+<p>第二个等式就是用来约束模型训练尽量表示我们的已知样本信息。</p>
+<p>最大熵模型这里引入了一个特征函数的概念：</p>
+<pre><code>f(x,y) = 1, x与y满足某一事实
+f(x,y) = 0, 否则
+    
+</code></pre>
+<p>为什么需要特征函数？比较容易理解的是，特征函数其实是一个用户接口，我们可以通过定制特征函数来控制模型的训练。比如，我们可以这样设计特征函数：</p>
+<pre><code>f(x,y) = 1, 客户拥有一套房产，允许贷款
+f(x,y) = 0, 否则
+</code></pre>
+<p>好像还是不太清楚为什么需要特征函数啊！我们换个角度来思考，即怎样度量两个分布之间的距离或者相似度呢？</p>
+<p>\[ \sum_{x,y} ||p(x,y)-q(x,y)|| \]</p>
+<p>\[ \sum_{x,y} p(x,y)f(x,y) = \sum_{x,y} q(x,y)f(x,y) \]</p>
+<p>\[ \sum_{x,y} p(x,y)log(p(x,y) / q(x,y)) \]</p>
+<p>第一个就是常用的欧式距离；第二个是$f(x,y)$关于两个分布的期望差值；第三个是KL距离。我们重点关注第二个度量方法，因为最大熵模型用的就是这种。</p>
+<p>注意，$f(x,y)$必须是实数函数，而最大熵模型一般要求这个函数是一个二值函数。也就是说通过这个特征函数把$x$和$y$之间千丝万缕的关系转化成了一个实数值，这时我们就可以度量$P^-(x)P(y|x)$和$P^-(x,y)$两个分布之间的相似度了。</p>
+<p>我们再来看个图，理解一下特征函数$f(x,y)$的实质意义是什么。</p>
+<img src="/2021/02/22/%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B/%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B%E6%9C%9F%E6%9C%9B%E7%BA%A6%E6%9D%9F%E5%AE%9E%E8%B4%A8.png" class>
+
+<p>从这里看出，特征函数其实就是从分布上采样，特征函数越多、越好就可以使得采样越充分，但同时模型也就越复杂，容易过拟合。</p>
+<p>所以在这些特征函数的约束下，使得两个分布在这些采样点上都能取得一致，进而使得两个分布尽量相似。</p>
+<p>说到这里，特征函数的意义应该明白了。没错，最大熵模型就是通过约束上面说的两个期望相等来使得模型尽量去学习表征我们的观测数据。</p>
+<h2 id="最大熵模型学习"><a href="#最大熵模型学习" class="headerlink" title="最大熵模型学习"></a>最大熵模型学习</h2><p>对于最大熵这种有约束的优化问题，一般情况下会通过拉格朗日乘子法把它转化为无约束优化问题。</p>
+<p>\[ min_p max_w L(p,w) = \sum_{x,y} P^-(x)P(y|x)log(P(y|x)) + w_0(1- \sum_y P(y|x)) + \sum_{i=1}^n w_i(\sum_{x,y} P^-(x,y)f_i(x,y) - \sum_{x,y} P^-(x)P(y|x)f_i(x,y)) \]</p>
+<p>整个优化目标表达式包含两个未知项，一个是待求的类后验分布$P(y|x)$，另一个是权重$w$。</p>
+<p>一方面，我们希望$w$越大越好，这等价于要求模型要尽可能拟合或者说表示我们的数据；另一方面，希望最后选择的$P(y|x)$使得$L(p,w)$越小越好，这又等价于要求选择的模型使得条件熵$H(x)$越大越好。</p>
+<p>到此，只要优化上面的函数，就可以满足我们两方面的需求了。</p>
+<p>对于简单的栗子，我们可以直接求上面代价函数的解析解，其实就是二元函数的极值求解问题。比如，先对$P(y|x)$求偏导并令求导公式等于0，然后再对$w$求导并令求导公式等于0，解出$w^*$。</p>
+<p>最终，我们求得的$P(y|x)$形式为：</p>
+<p>\[ P_w(y|x) = \frac{exp(\sum_{i=1}^n w_if_i(x,y))}{Z_w(x) } \]</p>
+<p>\[ Z_w(x) = \sum_y exp(\sum_{i=1}^n w_if_i(x,y)) \]</p>
+<p>而实际上，我们遇到的问题大多是样本多、特征函数也多的情况，这个时候只能采用迭代求解的方法。</p>
+<p>最大熵模型目前最采用的迭代优化算法主要是IIS（迭代尺度法），也出现了该算法的很多变体算法。大家有兴趣可以关注一下。</p>
+<p>基本IIS算法思想：</p>
+<p>假设最大熵模型当前的参数是：</p>
+<p>\[ w_t = (w_1,w_2,…,w_n)^T \]</p>
+<p>找到新的参数：</p>
+<p>\[ w_{t+1} = (w_1+δ_1,w_2+δ_2,…,w_n+δ_n)^T \]</p>
+<p>使得模型的对数似然值</p>
+<p>\[ L(w) = \sum_{x,y} P^-(x,y)\sum_{i=1}^n w_if_i(x,y) - \sum_x P^-(x)log(Z_w(x)) \]</p>
+<p>增大。不断地使用该方法对$w$进行更新，就可以使得$w$最终收敛到$w^*$。那现在的问题就变成了怎么去迭代寻找$δ = (δ_1,δ_2,…,δ_n)^T$了。</p>
+<p>在机器学习领域，有一个非常好的优化策略，就是当原问题难以求解的时候，可以通过优化原问题的下界函数，来间接优化原问题。</p>
+<p>比如，现在的优化问题是：</p>
+<p>\[ L(w_{t+1}) - L(w_t) = \sum_{x,y} P^-(x,y)\sum_{i=1}^n δ_if_i(x,y) - \sum_x P^-(x)log\frac{Z_{w+δ}(x)}{Z_w(x)} \]</p>
+<p>我们当然希望这个似然值改变量越大越好，可是这问题不好求解怎么办？那我们就求这个函数的下界函数嘛。于是，通过不停地改写，就得到了下面的式子：</p>
+<p>\[ L(w_{t+1}) - L(w_t) &gt;= \sum_{x,y} P^-(x,y)\sum_{i=1}^n δ_i f_i(x,y) + 1 - \sum_x P^-(x) \sum_y P_w(y|x) \sum_{i=1}^n \frac{f_i(x,y)}{f^#(x,y)}exp(<br>δ_i f^#(x,y)) \]</p>
+<p>\[ f^#(x,y) ＝ \sum_{i=1}^n f_i(x,y) \]</p>
+<p>我们可以对这个下界函数针对$δ_i(i∈[1,n])$进行求导，解出$δ_i$。</p>
+<p>\[ \sum_{x,y} P^-(x,y)f_i(x,y) - \sum_{x,y} P^-(x) P_w(y|x) f_i(x,y) exp(δ_i f^#(x,y)) = 0 \]</p>
+<h2 id="最大熵的应用"><a href="#最大熵的应用" class="headerlink" title="最大熵的应用"></a>最大熵的应用</h2><p>关于最大熵的应用，我自己接触的就是它在语言模型中的应用。记得Mikolov的RNN的网络结构中，有集成一个最大熵的模型，有兴趣可以去看一下。</p>
+<p>另外，最大熵模型也可以应用于平常的序列标注任务，比如专有名词识别NER、语义角色标注SRL，分词、词性标注POS以及语义解析SP等任务。</p>
+<p>语义解析是搜索、对话等AI技术的基石，所以就拿语义解析来简单举例：</p>
+<table>
+<thead>
+<tr>
+<th>打</th>
+<th>电</th>
+<th>话</th>
+<th>给</th>
+<th>徐</th>
+<th>文</th>
+<th>强</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B_OPT</td>
+<td>B_TARGET</td>
+<td>E_TARGET</td>
+<td>O</td>
+<td>B_NAME</td>
+<td>I_NAME</td>
+<td>E_NAME</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>帮</th>
+<th>我</th>
+<th>订</th>
+<th>明</th>
+<th>天</th>
+<th>的</th>
+<th>飞</th>
+<th>机</th>
+<th>票</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>O</td>
+<td>O</td>
+<td>B_OPT</td>
+<td>B_DATE</td>
+<td>E_DATE</td>
+<td>O</td>
+<td>B_TARGET</td>
+<td>I_TARGET</td>
+<td>E_TARGET</td>
+</tr>
+</tbody></table>
+<p>类似这样序列化标注的任务，都可以考虑使用最大熵模型来做。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，我们最大熵模型的基本理论和应用都已经讲完了，主要内容包括：</p>
+<ul>
+<li><p>逻辑斯特回归与最大熵模型是怎么和熵联系起来的；</p>
+</li>
+<li><p>最大熵模型的代价损失函数中约束项的含义分析；</p>
+</li>
+<li><p>最大熵模型常用的优化及IIS方法基本原理；</p>
+</li>
+<li><p>最大熵模型的应用场景简单介绍。</p>
+</li>
+</ul>
+<p>另外，注意<code>1 2</code>两小节内容仅是个人的理解和分析，仅供参考学习。有兴趣的童鞋可以重点关注一下最大熵模型学习优化的公式推导，仔细阅读还是能够看明白的。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><strong>统计学习方法 李航著</strong></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/02/12/%E5%AD%A6%E4%BC%9A%E6%8F%90%E9%97%AE/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2021-02-22 15:29:17
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">
+                        <b>#</b> 笔记
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" title="机器学习">
+                        <b>#</b> 机器学习
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" title="统计学习方法">
+                        <b>#</b> 统计学习方法
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2021/02/28/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B"><span class="toc-text">最大熵模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0"><span class="toc-text">最大熵模型学习</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E7%86%B5%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-text">最大熵的应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" href="">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" href="">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="wechat" href="">
+            <i class="iconfont icon-wechat"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="weibo" href="">
+            <i class="iconfont icon-weibo"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2021</a>
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B + '&url=' + http%3A%2F%2Fexample.com%2F2021%2F02%2F22%2F%25E6%259C%2580%25E5%25A4%25A7%25E7%2586%25B5%25E6%25A8%25A1%25E5%259E%258B%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2021/02/22/%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

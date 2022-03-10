@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="Hexo, Gruntjs, Nodejs, Reactjs, Vuejs" />
+  <meta name="author" content="小豆豆" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      隐马尔可夫模型 
+      
+      
+      |
+    
+     MyAmazingGarden
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Oranges</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">Friends</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">隐马尔可夫模型</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2021-03-20 15:33:44
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">
+                    <b>#</b> 笔记
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/HMM/" title="HMM">
+                    <b>#</b> HMM
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E8%AF%AD%E9%9F%B3/" title="语音">
+                    <b>#</b> 语音
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>隐马尔可夫模型最为成功的应用领域就是语言识别<strong>ASR</strong>和语音合成<strong>TTS</strong>。</p>
+<p>这章内容，我想以语音识别作为一个切入点来讨论一下隐马模型，一方面可以总结一下之前做的工作，另一方面大家也可以了解一些语音相关的知识。</p>
+<p>下面罗列一下本文的内容：</p>
+<ul>
+<li><p>语音识别系统框架；</p>
+</li>
+<li><p>隐马尔可夫模型声学建模。</p>
+</li>
+</ul>
+<h2 id="语音识别系统框架"><a href="#语音识别系统框架" class="headerlink" title="语音识别系统框架"></a>语音识别系统框架</h2><p>首先贴一下语言识别的整个系统框架图，在这整个系统当中，声学模型是非常重要的核心模块，而这块的建模方法就是采用隐马模型进行建模，即为每个<strong>triphone</strong>建立各自的隐马模型。</p>
+<img src="/2021/03/20/%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB%E7%B3%BB%E7%BB%9F.png" class>
+
+<p><strong>triphone</strong>是语音的最小建模单元，同时也意味着语音识别其实是从<strong>triphone</strong>这个粒度上开始的。</p>
+<p>在深度学习出来之前，声学模型建模主要采用<strong>HMM+GMM</strong>，而现在主流都是采用<strong>HMM+DBN/LSTM</strong>进行建模。</p>
+<p>这里先对<strong>triphone</strong>进行一个简单的介绍，实际当中的<strong>triphone</strong>可能不是这样，但基本是这个形式。</p>
+<pre><code>汉字: 语 音
+拼音: yu yin
+音子: y u y in
+triphone: sil-y+u,y-u+y,u-y+in,y-in+sil  
+</code></pre>
+<p>可以看出<strong>triphone</strong>实际上是含上下文的音素组合，因此它可以很好的模拟人说话协同发音的事实。</p>
+<p>为什么采用对<strong>triphone</strong>进行建模，而不直接对词语进行建模呢？大致总结有以下几点原因：</p>
+<ul>
+<li><p>词语体量大，而且随时间演化；</p>
+</li>
+<li><p>建模粒度粗，对发音细节刻画不够；</p>
+</li>
+<li><p>词粒度上建模，训练数据稀疏问题严重。</p>
+</li>
+</ul>
+<p>我们知道26个字母可以组成近75w的英文词汇，3500个常用汉字可以组成数不清个汉语词语，所以直接对词进行声学建模不是一个可取的方案。</p>
+<p>如果在词这个粒度上进行建模，那么每个词的声学模型都会设计地很复杂且不统一，同时也很难捕捉词语发音的细节变化。因此，需要更细的粒度上进行建模，保证每个模型相对简单，而且更容易对发音进行统一建模。</p>
+<p>另外，需要对每个词都进行音频采集从而获取足够的数据来对词语进行建模。但实际上，这个过程是非常耗时耗力的。如果选择对<strong>triphone</strong>建模，那么由于很多词都有着相同的发音单元，因此都可以用来对相应的<strong>triphone</strong>进行建模。</p>
+<p>所以说，对<strong>triphone</strong>建模既可以很好地刻画发音的细节，又可以以不变应万变。因为不管词汇怎么变化，发音的基本组成单元是基本保持不变的，而且训练数据容易搜集。</p>
+<p>以上，大致说明了一下语音识别系统中，声学建模的方法和建模单元的选择。</p>
+<h2 id="隐马尔可夫模型声学建模"><a href="#隐马尔可夫模型声学建模" class="headerlink" title="隐马尔可夫模型声学建模"></a>隐马尔可夫模型声学建模</h2><p>这里，我们开始讨论怎么利用隐马模型进行<strong>triphone</strong>建模。还是先贴一张图吧。</p>
+<img src="/2021/03/20/%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/Triphone%E9%9A%90%E9%A9%AC%E5%BB%BA%E6%A8%A1.png" class>
+
+<p>需要说明一下，图中黄色的圈圈代表<strong>triphone</strong>的5个状态（一般是5个，其中一头一尾是起始和结束状态），对应于隐马模型的内部状态。红色圈圈代表音频中提取的帧特征，对应着隐马模型的观测序列。</p>
+<p>需要注意的是，<strong>triphone</strong>中的状态可以跳转到自己，因此可以模拟拖音和个体发音时长差异的现象。所以，<strong>triphone</strong>对应的隐马模型是非常有意思的，它的跳转是受限的，只能跳到自己或者下一个状态，而这些限制恰恰也是非常重要的。</p>
+<p>另外，<strong>triphone</strong>隐马模型的内部状态其实对应的就是<strong>monophone</strong>。</p>
+<p>好的，现在是时候详细讨论一下隐马模型了。</p>
+<h3 id="隐马模型"><a href="#隐马模型" class="headerlink" title="隐马模型"></a>隐马模型</h3><p>隐马模型包含内部状态、外部观测、以及各种概率。而所谓的隐马建模，本质上也是去估计状态之间的转移概率分布、状态的初始概率分布以及状态产生观测的条件概率分布，即隐马模型可以表示成\(λ=(A,B,π)\)。其中，\(A\)表示状态转移概率矩阵，\(B\)表示观测概率矩阵，\(π\)表示初始概率向量。</p>
+<p>那么隐马模型的3个基本问题来了？</p>
+<ul>
+<li><p>怎么计算生成特定观测序列的概率？</p>
+</li>
+<li><p>怎么根据观测数据，输出对应概率最大的内部状态序列呢？</p>
+</li>
+<li><p>怎么去计算这些模型参数呢？</p>
+</li>
+</ul>
+<p>对应到<strong>triphone</strong>建模这个问题上来看，一是怎么利用音频提取出来的帧特征估计对应隐马模型参数，二是选择出最有可能产生这些帧特征的隐马模型是哪个，这也就意味着音频帧序列对应的<strong>triphone</strong>序列被识别了出来。</p>
+<p>如之前所说，隐马模型中，当前状态只依赖上一状态，而当前观测只依赖于当前状态，这就是齐次马尔可夫假设和观测独立性假设。</p>
+<h4 id="第一个问题"><a href="#第一个问题" class="headerlink" title="第一个问题"></a>第一个问题</h4><p>假设当前获取的帧序列为\(O=(o_1,o_2,o_3,…,o_T)\)，某个<strong>triphone</strong>对应的隐马模型为\(λ=(A,B,π)\)，问题等价于求\(P(O|λ)\)。</p>
+<p>如果使用暴力破解法，可以直接使用全概率公式进行展开计算。</p>
+<p>\[ P(O|λ) = \sum_I P(O|I,λ)P(I|λ)<br>\= \sum_{i_1,i_2,…,i_T} π_{i_1}b_{i_1}(o_1)a_{i_1i_2}b_{i_2}(o_2)…a_{i_{T-1}i_T}b_{i_T}(o_T) \]</p>
+<p>但这种计算方式明显复杂度高，存在大量的冗余计算量。所以，隐马模型使用了动态规划算法，即前向后向算法。</p>
+<h5 id="前向算法"><a href="#前向算法" class="headerlink" title="前向算法"></a>前向算法</h5><p>给定<strong>triphone</strong>对应的隐马模型\(λ=(A,B,π)\)，记\(α_t(i)\)为到\(t\)时刻得到帧序列\(o_1,o_2,o_3,…,o_t\)且状态为\(s_i\)的概率为前向概率。</p>
+<p>\[α_t(i) = P(o_1,o_2,o_3,…,o_t,i_t=s_i|λ)\]</p>
+<img src="/2021/03/20/%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/%E5%89%8D%E5%90%91%E6%A6%82%E7%8E%87.png" class>
+
+<p>结合上图，很容易看出\(α_t(j)\)和\(α_{t+1}(i)\)之间的关系，即黄圈圈转移到绿圈圈并产生红圈圈的概率乘积和，黄圈圈代表前一时刻\(α_t(j)\)。</p>
+<p>\[α_{1}(i) = π_ib_i(o_1) \]</p>
+<p>\[α_{t+1}(i) = \sum_j α_{t}(j)a_{ji}b_i(o_{t+1})\]</p>
+<p>\[P(O|λ) = \sum_j α_{T}(j) \]</p>
+<p>所以，\(α_t(i)\)代表着\(t\)时刻观测到帧序列\(o_1,o_2,o_3,…,o_t\)且当前状态是\(s_i\)的概率。</p>
+<p>因为当我们要算\(α_{t+1}(i)\)的时候，只需要保存上一时刻所有的\(α_{t}(j)\)就可以了，不需要保存再之前的前向概率，当然也不会出现重复计算的问题。</p>
+<p>到这，第一个问题也就解决了。</p>
+<h5 id="后向算法"><a href="#后向算法" class="headerlink" title="后向算法"></a>后向算法</h5><p>给定<strong>triphone</strong>对应的隐马模型\(λ=(A,B,π)\)，记\(β_t(i)\)为到\(t\)时刻得到帧序列\(o_{t+1},o_{t+2},o_{t+3},…,o_T\)且状态为\(s_i\)的概率为后向概率。</p>
+<p>\[β_t(i) = P(o_{t+1},o_{t+2},o_{t+3},…,o_T,i_t=s_i|λ)\]</p>
+<img src="/2021/03/20/%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/%E5%90%8E%E5%90%91%E6%A6%82%E7%8E%87.png" class>
+
+<p>同样结合上图，很容易看出\(β_t(i)\)和\(β_{t+1}(j)\)之间的关系，即绿圈圈并产生红圈圈并由黄圈圈转移的概率乘积和，绿圈圈代表后一时刻\(β_{t+1}(j)\)。</p>
+<p>\[β_{T}(i) = 1 \]</p>
+<p>\[β_{t}(i) = \sum_j β_{t+1}(j)a_{ij}b_j(o_{t+1})\]</p>
+<p>\[P(O|λ) = \sum_j β_{1}(j)π_jb_j(o_1) \]</p>
+<p>所以，拥有和前向算法一样的优点，后向算法也可以算出特定帧序列出现的概率。</p>
+<p><strong>前向算法是求一个概率累积量的过程，而后向算法是求概率剩余量的过程。</strong></p>
+<p>结合前向算法和后向算法，可以得到：</p>
+<p>\[P(O|λ) = \sum_i\sum_j α_{t}(i)a_{ij}b_j(o_{t+1})β_{t+1}(j) \]</p>
+<img src="/2021/03/20/%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/%E5%89%8D%E5%90%91%E5%90%8E%E5%90%91%E6%A6%82%E7%8E%87%E7%BB%93%E5%90%88.png" class>
+
+<p>遍历\(t\)和\(t+1\)时刻所有的状态，结合前向和后向的概率进行帧序列出现概率的计算。</p>
+<h5 id="结合前向后向算法"><a href="#结合前向后向算法" class="headerlink" title="结合前向后向算法"></a>结合前向后向算法</h5><p>为什么我们有了前向算法，还需要后向算法呢？这是因为结合两者可以导出一些概率的计算公式，而这些概率对于模型参数的估计有重要作用。</p>
+<p>这些结论都是依据前向算法和后向算法的定义推导出来的。</p>
+<ul>
+<li>给定模型\(λ=(A,B,π)\)和帧序列\(O\)，在\(t\)时刻状态为\(s_i\)的概率。</li>
+</ul>
+<p>\[P(i_t = s_i|λ,O) = \frac{α_{t}(i)β_{t}(i)}{\sum_j α_{t}(j)β_{t}(j)} \]</p>
+<ul>
+<li>给定模型\(λ=(A,B,π)\)和帧序列\(O\)，在\(t\)时刻状态为\(s_i\)，\(t+1\)处于状态\(s_j\)的概率。</li>
+</ul>
+<p>\[P(i_t = s_i,i_{t+1} = s_j|λ,O) = \frac{α_{t}(i)a_{ij}b_{t+1}(o_{t+1})β_{t+1}(j)}{\sum_i\sum_j α_{t}(i)a_{ij}b_{t+1}(o_{t+1})β_{t+1}(j)} \]</p>
+<ul>
+<li>给定模型\(λ=(A,B,π)\)和帧序列\(O\)，状态\(s_i\)出现的概率。</li>
+</ul>
+<p>\[ \sum_{t=1}^TP_t(i_t = s_i|λ,O) \]</p>
+<ul>
+<li>给定模型\(λ=(A,B,π)\)和帧序列\(O\)，由状态\(s_i\)转移的概率。</li>
+</ul>
+<p>\[ \sum_{t=1}^{T-1} P_t(i_t = s_i|λ,O) \]</p>
+<ul>
+<li>给定模型\(λ=(A,B,π)\)和帧序列\(O\)，由状态\(s_i\)转移到\(s_j\)的概率。</li>
+</ul>
+<p>\[ \sum_{t=1}^{T-1} P_t(i_t = s_i,i_{t+1}=s_j|λ,O) \]</p>
+<h4 id="第二个问题"><a href="#第二个问题" class="headerlink" title="第二个问题"></a>第二个问题</h4><p>对于给定<strong>triphone</strong>对应的隐马模型\(λ=(A,B,π)\)以及帧序列为\(O=(o_1,o_2,o_3,…,o_T)\)，要推算最有可能的内部状态序列帧序列\(S=(s_1,s_2,s_3,…,s_T)\)。</p>
+<p>对于这个问题，有两种解决方法：近似方法和viterbi解码。</p>
+<h4 id="近似方法"><a href="#近似方法" class="headerlink" title="近似方法"></a>近似方法</h4><p>\[s_t = argmax\ P_t(i_t = s_j|λ,O)\]</p>
+<p>这样的求解并不能保证全局最优，只能作为参考。</p>
+<h4 id="Viterbi解码"><a href="#Viterbi解码" class="headerlink" title="Viterbi解码"></a><strong>Viterbi</strong>解码</h4><p><strong>Viterbi</strong>解码的思想类似于前向算法，只不过我们现在是要求概率最大的那条路径。</p>
+<p>给定<strong>triphone</strong>对应的隐马模型\(λ=(A,B,π)\)，记\(δ_t(i)\)为到\(t\)时刻得到帧序列\(o_1,o_2,o_3,…,o_t\)且状态为\(s_i\)的最优路径概率。</p>
+<p>\[δ_{1}(i) = π_ib_i(o_1) \]<br>\[φ_1(i) = 0 \]</p>
+<p>\[δ_{t+1}(i) = \max_{j} α_{t}(j)a_{ji}b_i(o_{t+1})\]<br>\[φ_{t+1}(i) = argmax\ α_{t}(j)a_{ji} \]</p>
+<p>\[ \max_j δ_{T}(j) \]<br>\[ argmax\ δ_{T}(j) \]</p>
+<p>和前向算法相比，就是把求和改成了求最大值，同时记录一下路径信息，即从上一时刻哪个状态转移到当前状态。</p>
+<h4 id="第三个问题"><a href="#第三个问题" class="headerlink" title="第三个问题"></a>第三个问题</h4><p>说了这么多，其实我们都是假设模型参数已知，那隐马模型的参数究竟怎样估计呢？现在我们开始讨论这个问题。</p>
+<p>实际上，我们并不知道帧序列和内部状态的对应关系，所以无法直接用MLE极大似然估计法来估计模型参数。对于这种存在隐变量的参数估计问题，我们马上可以联想到EM算法。</p>
+<p>之前提到，在深度学习之前，\(b(o_t)\)一般采用GMM混合高斯模型进行建模。</p>
+<p>\[ p(x) = \sum_{j=1}^{K} ω_j N_k(x;μ_j,Σ_j)\]</p>
+
+
+<p>EM算法分为两部走，第一步是求期望，即各种后验概率的计算；第二步是利用这些后验概率来更新当前模型参数。</p>
+<h5 id="E-Step"><a href="#E-Step" class="headerlink" title="E-Step"></a>E-Step</h5><p>求不同时刻，各种状态的分布：\[γ_t(s_i) = P(i_t = s_i|λ,O)\]</p>
+<p>求不同时刻，各种状态之间转换的分布：\[ξ_t(s_i<br>,s_j) = P(i_t = s_i,i_{t+1} = s_j|λ,O)\]</p>
+<p>求帧到各状态混合高斯分布分量的后验分布：\[ρ_j(s_i,o_t) = P_{s_i}(j|o_t)\]</p>
+<h5 id="M-Step"><a href="#M-Step" class="headerlink" title="M-Step"></a>M-Step</h5><p>更新各状态初始概率：\[ π_i^* = γ_1(s_i) \]</p>
+<p>更新各状态之间的转移概率：\[ a_{ij}^* = \frac{\sum_{t=1}^{T-1}ξ_t(s_i<br>,s_j)}{\sum_{j=1}^N\sum_{t=1}^{T-1}ξ_t(s_i<br>,s_j)}\]</p>
+<p>更新各状态各混合高斯分布分量的均值：\[ μ_j^* = \frac{\sum_{t=1}^Tρ_j(s_i,o_t)γ_t(s_i)o_t}{\sum_{t=1}^T γ_t(s_i)ρ_j(s_i,o_t)}\]</p>
+<p>更新各状态各混合高斯分布分量的方差：\[ Σ_j^* = \frac{\sum_{t=1}^T ρ_j(s_i,o_t)γ_t(s_i)(o_t-μ_j)^T(o_t-μ_j)}{\sum_{t=1}^T γ_t(s_i)ρ_j(s_i,o_t)}\]</p>
+<p>更新各状态混合高斯分布分量的权重：\[ ω_j^* = \frac{\sum_{t=1}^T ρ_j(s_i,o_t)γ_t(s_i)}{\sum_{j=1}^K\sum_{t=1}^T γ_t(s_i)ρ_j(s_i,o_t)}\]</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>隐马模型涉及的知识还是很多的，我们主要需要了解隐马模型的两个独立性假设、前向后向算法、<strong>viterbi</strong>解码以及EM参数估计这些知识。</p>
+<p>这里只是简单地从声学模型建模来切入讨论隐马模型的相关知识点，事实上声学模型建模过程远比这里说的复杂。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>统计学习方法 李航</p>
+<p><a target="_blank" rel="noopener" href="http://www.inf.ed.ac.uk/teaching/courses/asr/2012-13/asr03-hmmgmm-4up.pdf">asr03-hmmgmm</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/03/12/%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2021-03-20 15:33:44
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">
+                        <b>#</b> 笔记
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/HMM/" title="HMM">
+                        <b>#</b> HMM
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E8%AF%AD%E9%9F%B3/" title="语音">
+                        <b>#</b> 语音
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB%E7%B3%BB%E7%BB%9F%E6%A1%86%E6%9E%B6"><span class="toc-text">语音识别系统框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%A3%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1"><span class="toc-text">隐马尔可夫模型声学建模</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%90%E9%A9%AC%E6%A8%A1%E5%9E%8B"><span class="toc-text">隐马模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-text">第一个问题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%89%8D%E5%90%91%E7%AE%97%E6%B3%95"><span class="toc-text">前向算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%90%8E%E5%90%91%E7%AE%97%E6%B3%95"><span class="toc-text">后向算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BB%93%E5%90%88%E5%89%8D%E5%90%91%E5%90%8E%E5%90%91%E7%AE%97%E6%B3%95"><span class="toc-text">结合前向后向算法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-text">第二个问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%91%E4%BC%BC%E6%96%B9%E6%B3%95"><span class="toc-text">近似方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Viterbi%E8%A7%A3%E7%A0%81"><span class="toc-text">Viterbi解码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="toc-text">第三个问题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#E-Step"><span class="toc-text">E-Step</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#M-Step"><span class="toc-text">M-Step</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" href="">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" href="">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="wechat" href="">
+            <i class="iconfont icon-wechat"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="weibo" href="">
+            <i class="iconfont icon-weibo"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2021</a>
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B + '&url=' + http%3A%2F%2Fexample.com%2F2021%2F03%2F20%2F%25E9%259A%2590%25E9%25A9%25AC%25E5%25B0%2594%25E5%258F%25AF%25E5%25A4%25AB%25E6%25A8%25A1%25E5%259E%258B%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2021/03/20/%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

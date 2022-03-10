@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="Hexo, Gruntjs, Nodejs, Reactjs, Vuejs" />
+  <meta name="author" content="小豆豆" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      【转】深度学习-目标检测-YOLOv1、YOLOv2、YOLOv3 
+      
+      
+      |
+    
+     MyAmazingGarden
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Oranges</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">Friends</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">【转】深度学习-目标检测-YOLOv1、YOLOv2、YOLOv3</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2021-12-28 22:25:53
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" title="深度学习">
+                    <b>#</b> 深度学习
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" title="目标检测">
+                    <b>#</b> 目标检测
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="YOLO"><a href="#YOLO" class="headerlink" title="YOLO"></a>YOLO</h1><p>YOLO是与SSD齐名的one_stage目标检测算法代表。SSD系列有比较多的变体，大部分都不是SSD作者做的工作。而YOLO目前已经进化到V3，据我所知都是yolo作者自己做的工作。</p>
+<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p>由于yolo属于one_stage的目标检测算法，所以网络结构比较简单。固定输入448x448大小的图片，最后输出7x7x30大小的特征图。</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/net_structure.png" class>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/architecture.png" class>
+
+<p>作者的主干网络受GoogLeNet的启发，共有24个卷积层。在ImageNet的1000类竞赛数据集上预训练了前20层卷积层，接着是平均池化层和全连接层。训练分类时添加了四个卷积层和两个全连接层，这些层的权重都用随机值初始化。预训练时图片输入时224x224，训练检测时改为448x448。</p>
+<p>模型的最后一层使用线性激活函数，而所有其它的层使用下面的leaky rectified activation。</p>
+<h1 id="预测输出"><a href="#预测输出" class="headerlink" title="预测输出"></a>预测输出</h1><p>上面说了，yolo最后输出的是一个7x7x30大小的特征图。</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/model.png" class>
+
+<p>7x7x30大小的特征图把图片分成7x7个格子，每个1x1x30负责预测两个box和这个格子对应的20个分类。每个box包含5个值：\(x_{center}, y_{center}, w, h, confiddence \)。前两个值表示anchor中心相对于本格子左上角的偏移值（用格子大小归一化），范围在0到1之间。中间两个值表示预测的box的宽高，用图片大小归一化，范围也是0到1。最后一个值是对于这个box包含目标的信心。</p>
+<p>可以看到yolo也是有anchor的，不过只有中心点坐标有anchor，长宽没有。作者论文里说“如果目标的中心落入某个网格单元中，那么该网格单元就负责检测该目标”，之前看这句车轱辘话看了好多遍没看明白，其实把每个方格的左上角坐标看做anchor点的话就超容易理解了。</p>
+<p>每个box需要5个值，每个方格上预测两个box, 外加20个分类，刚好是30。</p>
+<p>借用《图解YOLO》里的一张图，表示如下：</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/example.png" class>
+
+<h1 id="LOSS设计"><a href="#LOSS设计" class="headerlink" title="LOSS设计"></a>LOSS设计</h1><p>本节内容主要来自《图解YOLO》。</p>
+<p>yolo的预测如下图所示：</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201217700.png" class>
+
+<p>损失函数的设计目标就是让坐标（x,y,w,h），confidence，classification 这个三个方面达到很好的平衡。</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201248114.png" class>
+
+
+<p>更正一下，上图是有错误的，蓝框内的内容应该是：</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201305775.png" class>
+
+
+<p>简单的全部采用了sum-squared error loss来做这件事会有以下不足： a) 8维的localization error和20维的classification error同等重要显然是不合理的； b) 如果一个网格中没有object（一幅图中这种网格很多），那么就会将这些网格中的box的confidence push到0，相比于较少的有object的网格，这种做法是overpowering的，这会导致网络不稳定甚至发散。 解决方案如下：</p>
+<ul>
+<li>更重视8维的坐标预测，给这些损失前面赋予更大的loss weight, 记为 \(\lambda_{coord}\),在pascal VOC训练中取5。（上图蓝色框）</li>
+<li>对没有object的bbox的confidence loss，赋予小的loss weight，记为\(\lambda_{noobj}\)，在pascal VOC训练中取0.5。（上图橙色框）</li>
+<li>有object的bbox的confidence loss (上图红色框) 和类别的loss （上图紫色框）的loss weight正常取1。</li>
+<li>对不同大小的bbox预测中，相比于大bbox预测偏一点，小box预测偏一点更不能忍受。而sum-square error loss中对同样的偏移loss是一样。 为了缓和这个问题，作者用了一个比较取巧的办法，就是将box的width和height取平方根代替原本的height和width。 如下图：small bbox的横轴值较小，发生偏移时，反应到y轴上的loss（下图绿色）比big box(下图红色)要大。<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201410701.png" class></li>
+</ul>
+<p>测试结果</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201434245.png" class> <img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201502887.png" class>
+
+
+<p>看上图中的错误分析，相对于FAST RCNN，定位错误稍多，但是把背景分为物体的假阳性很少，作者认为这是因为YOLO在训练期间和测试时都会顾及到整个图像（最后又全连接，每个输出都是由整个计算图得到的，这一点和语义分割的GCN网络有异曲同工之妙），所以它隐式地包含了关于类的上下文信息以及它们的外观。</p>
+<p>整体上看的话，bbox包裹的不是很严密，空隙较大。而且作者自己也说了，对于小的、密集的物体识别不好。毕竟每个方格只预测两个bbox，这种机制对密集物体无能为力。</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201522640.png" class>
+
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h2 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h2><ul>
+<li>快，效果够用<h2 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h2></li>
+<li>当同一类物体出现的不常见的长宽比和其他情况时泛化能力偏弱</li>
+<li>YOLO对相互靠的很近的物体（挨在一起且中点都落在同一个格子上的情况），还有很小的群体 检测效果不好，这是因为一个网格中只预测了两个框，并且只属于一类</li>
+<li>定位误差是影响检测效果的主要原因（没有先验anchor框，直接回归，这样还是比较粗糙）</li>
+</ul>
+<p>每个格子预测的两个bbox，分类是在一起的，没有分开，这也一定程度影响了分类的准确率。</p>
+<p>而且由于预测的位置偏移和长宽都太直接，没有类似Faster-RCNN那样的偏移系数变换保证长宽大于0，偏移也没有用框大小做归一化，这一定程度影响了bbox的准确性。我个人认为参考Faster-RCNN的坐标偏移系数变换方式，yolo可以定位更精准。</p>
+<p>当然，本论文是16年的，比SSD早（比Faster-RCNN迟一点，可能当时没来得及参考），具有一定的开创性，某些方面粗糙也是可以原谅的。</p>
+<h1 id="YOLOv2"><a href="#YOLOv2" class="headerlink" title="YOLOv2"></a>YOLOv2</h1><p>YOLOv2的论文其实介绍了两个分类网络：YOLOv2和YOLO9000。其中后一个在前一个基础上扩展出来的，可以支持多达9000个分类。我主要关注基础的YOLOv2。</p>
+<p>看完论文我的感觉是，这个YOLOv2真的很SSD，让人傻傻分不清了。都是one-stage目标检测，真是殊途同归了。作者从SSD、Faster-RCNN和VGG等论文中借用了不少技巧过来。</p>
+<h1 id="动机和主要思想"><a href="#动机和主要思想" class="headerlink" title="动机和主要思想"></a>动机和主要思想</h1><p>作者在论文里说，YOLO与Fast R-CNN的误差比较分析表明，YOLO产生了大量的定位错误。与生成候选区域方法相比，YOLO召回率相对较低。 因此，我们主要关注改善召回率和定位，同时保持分类准确性。</p>
+<p>改进的思路并不是简单的加深、加宽网络，而是简化网络，然后让表征更易于学习，保持很快的速度。</p>
+<p>YOLOv2的主要改进思路都在一个表格里了：</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201543374.png" class>
+
+
+<p>下面来一个个分解。</p>
+<h2 id="batch-normalization（批归一化）"><a href="#batch-normalization（批归一化）" class="headerlink" title="batch normalization（批归一化）"></a>batch normalization（批归一化）</h2><p>这个是参考InceptionV2的做法，目前（2019）已经是深度卷积的常规操作，没什么可说的了。</p>
+<h2 id="High-Resolution-Classifier（训练分类器使用高分辨率图片）"><a href="#High-Resolution-Classifier（训练分类器使用高分辨率图片）" class="headerlink" title="High Resolution Classifier（训练分类器使用高分辨率图片）"></a>High Resolution Classifier（训练分类器使用高分辨率图片）</h2><p>作者先使用224x224的大小在coco上训练分类网络，然后使用448x448的分辨率进行10轮的分类训练，让分类器适应高分辨率的图片。</p>
+<h2 id="convolutional"><a href="#convolutional" class="headerlink" title="convolutional"></a>convolutional</h2><p>我理解作者说的是全卷积。</p>
+<p>YOLO直接使用卷积特征提取器顶部的全连接层来预测边界框的坐标。作者把全连接拿掉，完全使用卷积来生成坐标和分类的结果。</p>
+<p>使用416X416的输入图像，卷积层将图像下采样32倍，我们得到13×13的输出特征图。</p>
+<h1 id="anchor-boxes（使用锚框）"><a href="#anchor-boxes（使用锚框）" class="headerlink" title="anchor boxes（使用锚框）"></a>anchor boxes（使用锚框）</h1><p>参考Faster-RCNN的思路，引入锚框。</p>
+<p>YOLOv1在每个位置只有一个分类，引入锚框以后，每个位置预测对个锚框，每个锚框都有单独的分类。</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201609927.png" class>
+
+<p>这个图反应了YOLOv2相对于v1的改动。但是注意YOLOv2并不是每个位置预测两个锚框，下面会讲原因。（剧透：其实是5个锚框啦）</p>
+<p>使用锚框，精确度会小幅下降。因为原始的YOLO仅为每个图片预测98个框，但使用锚框后，我们的模型预测的框数超过一千个。 如果没有锚框，我们的中等模型将获得69.5 的mAP，召回率为81％。 使用锚框，我们的模型获得了69.2 的mAP，召回率为88％。尽管mAP减少，但召回率的增加意味着我们的模型有更大的改进空间。</p>
+<h1 id="new-network（新网络结构）"><a href="#new-network（新网络结构）" class="headerlink" title="new network（新网络结构）"></a>new network（新网络结构）</h1><p>作者提出了一个新的分类模型作为YOLOv2的基础。新的模型建立在网络设计的先前工作以及该领域的常识上。与VGG模型类似，大多使用3×3滤波器，并且在池化层步骤后使用两倍的通道数。按照Network in Network（NIN）的方法，使用全局平均池化来做预测，并使用1×1滤波器来压缩3×3卷积的特征表示。使用批量归一化来稳定训练，加速收敛。</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201643246.png" class>
+
+<p>最终的模型叫做Darknet-19，它有19个卷积层和5个Maxpool层。 Darknet-19只需要55.8亿次操作来处理图像，但在ImageNet上实现了72.9％的top-1精度和91.2％的top-5精度。</p>
+<p>相比较，VGG-16的卷积层在一个224×224分辨率单个图像上运行一次需要306.90亿浮点运算。YOLO的backbone一次前向传播要85.2亿次运行。在Imagenet上，用224×224的单张裁剪图像，YOLO的自定义模型的精度为88.0％而VGG-16则为90.0％。</p>
+<h1 id="dimension-priors（维度聚类）"><a href="#dimension-priors（维度聚类）" class="headerlink" title="dimension priors（维度聚类）"></a>dimension priors（维度聚类）</h1><p>当把锚框与YOLO一起使用时，我们会遇到两个问题。 首先是框的尺寸是手工挑选的。虽然网络可以通过学习适当地调整方框，但是如果我们从一开始就为网络选择更好的先验，就可以让网络更容易学习到更好的检测结果。</p>
+<p>我们不用手工选择先验，而是在训练集的边界框上运行k-means，自动找到良好的先验。</p>
+<p>下图是在coco和voc上聚类得到的5个anchor框：</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201708852.png" class>
+
+
+<p>通过对比作者发现聚类能获得比手工设置的锚框更好的检测结果。下图表明仅5个先验中心的平均IOU为61.0，其性能类似于9个锚框的60.9。 使用9个质心会得到更高的平均IOU。</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/2019041520172645.png" class>
+
+<h1 id="Direct-location-prediction（直接预测位置）"><a href="#Direct-location-prediction（直接预测位置）" class="headerlink" title="Direct location prediction（直接预测位置）"></a>Direct location prediction（直接预测位置）</h1><p>当在YOLO中使用锚框时，我们会遇到第二个问题：模型不稳定，尤其是在早期迭代的过程中。 大多数不稳定来自于预测框的（x，y）位置。预测的x、y的偏移系数是不受约束的，所以任何锚框都可以在图像中的任何一点结束，而不管这个框是在哪个位置预测的。随机初始化模型需要很长时间才能稳定以预测合理的偏移。</p>
+<p>YOLOv2没有预测偏移，而是遵循YOLO的方法，预测相对于网格单元位置的位置坐标。这使得真实值的界限在0到1之间。我们使用逻辑激活来限制网络的预测落在这个范围内。(应该是一个sigmod激活函数做的约束，而且w、h部分和Faster-RCNN是一致的)</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201756128.png" class>
+
+
+<h1 id="passthrough（使用一个直通层传递细粒度特征Fine-Grained-Features）"><a href="#passthrough（使用一个直通层传递细粒度特征Fine-Grained-Features）" class="headerlink" title="passthrough（使用一个直通层传递细粒度特征Fine-Grained Features）"></a>passthrough（使用一个直通层传递细粒度特征Fine-Grained Features）</h1><p>直通层将高分辨率特征与低分辨率特征连接起来，将相邻特征叠加到不同的通道中，而不是空间位置上，类似于ResNet中的恒等映射。将26×26×512的特征图变为13×13×2048的特征图，然后就可以与原来的特征连接。</p>
+<p>相当于语义分割里的底层特征和高层特征的融合。</p>
+<p>还记得前面说的Darknet-19吧, 分类网络训练好以后，去除最后一个卷积层，然后添加三个具有1024个滤波器的3X3的卷积层，然后在最后添加1×1卷积层，该层的滤波器数量是检测需要的输出数量。 对于VOC，我们预测5个边界框，每个边界框有5个坐标和20个类别，所以有125个滤波器。还添加了从最后的3×3×512层到倒数第二层卷积层的直通层，以便我们的模型可以使用细粒度特征。</p>
+<h1 id="Multi-Scale-Training（多尺度训练）"><a href="#Multi-Scale-Training（多尺度训练）" class="headerlink" title="Multi-Scale Training（多尺度训练）"></a>Multi-Scale Training（多尺度训练）</h1><p>YOLOv2是一个全卷积网络，可以使用不同的图片输入大小。每10个批次我们的网络会随机选择一个新的图像尺寸大小。由于我们的模型缩减了32倍，所以我们从32的倍数中抽取：{320,352，…，608}。因此，最小的选项是320×320，最大的是608×608。</p>
+<p>这个技巧基本就是VGG论文里说的尺度抖动。</p>
+<p>在低分辨率下，YOLOv2作为一种便宜但相当准确的检测器工作。 在288×288情况下，它的运行速度超过90 FPS，而mAp几乎与Fast R-CNN一样好。这使其成为小型GPU，高帧率视频或多视频流的理想选择。</p>
+<p>在高分辨率下，YOLOv2是一款先进的检测器，在VOC2007上获得了78.6的mAP，同时仍以高于实时速度运行。</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201824659.png" class> <img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201840826.png" class>
+
+
+<h1 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h1><p>快的不要不要的，指标也很好。</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415202058444.png" class>
+
+<h1 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h1><p>YOLOv2的论文就像一个大的trick串烧，最后烧的味道还不错，就是味道越来越像SSD。</p>
+<p>YOLOv3<br>YOLOv3的论文只有6页，作者在论文里保持了一贯的2B口吻，很不严肃呀。<br>看来看去我恍惚看到DSSD和YOLOv2合体，生出了一个叫YOLOv3的玩意（大误？！）。</p>
+<h1 id="主干网络"><a href="#主干网络" class="headerlink" title="主干网络"></a>主干网络</h1><p>作者对Darknet进行了改进，将网络深度扩展到53层，并在Imagenet上进行了预训练。新的网络称为Darknet-53。</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/2019041520192825.png" class>
+
+<p>除了网络层数比较深，还借鉴Resnet思想加入了残差短路连接。</p>
+<h1 id="检测"><a href="#检测" class="headerlink" title="检测"></a>检测</h1><p>此外，作者还借鉴DSSD的做法，加入了跳跃连接和上采样，实现了高层特征和底层特征的融合。和DSSD一样，使用多尺度的特征图来预测结果。这带来两个结果：1.新的网络结构预测更多的anchor框；2.由于使用了更底层的特征，YOLOv3对小物体的效果更好。（这里借用知乎上的一张图）</p>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415201954413.png" class>
+
+<p>使用416x416输出的情况下，YOLOv2预测输出13x13x5=845个anchor框。通用的图片输入情况下，每个cell预测3个anchor框，共有13x13x3+26x26x3+52x52x3=10647，是原来的12.6倍。</p>
+<h1 id="其它改动"><a href="#其它改动" class="headerlink" title="其它改动"></a>其它改动</h1><p>YOLOv2损失函数的后三项是平方误差，而YOLOv3则更改为交叉熵误差项<br>采用了多标签分类的方法进行目标检测。作者举的例子是man和woman。</p>
+<h1 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h1><img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415202041837.png" class>
+<img src="/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/20190415202058444.png" class>
+
+<h1 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h1><p>YOLOv3可写的东西不多，主要是主干网络的更新和对DSSD的借鉴。但是作者在论文里没怎么写DSSD。</p>
+<p>从V1到V3,我感觉作者的创新可能只剩下回归x、y偏移量时限制在cell方格内这一点了，其它好多都是借鉴过来的。</p>
+<h1 id="论文"><a href="#论文" class="headerlink" title="论文"></a>论文</h1><p>YOLO系列论文原文： <a target="_blank" rel="noopener" href="https://pjreddie.com/publications/">https://pjreddie.com/publications/</a></p>
+<p>YOLO v1 论文翻译：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/35416826">https://zhuanlan.zhihu.com/p/35416826</a></p>
+<p>YOLO9000(v2)论文翻译：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/35953382">https://zhuanlan.zhihu.com/p/35953382</a></p>
+<p>YOLO v3 论文翻译：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/37201615">https://zhuanlan.zhihu.com/p/37201615</a></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/36847982">论文精读|5th|YOLO v3的新特性|目标检测|附下载</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32525231">目标检测|YOLO原理与实现</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/24916786">图解YOLO</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25052190">YOLO升级版：YOLOv2和YOLO9000解析</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/25167153">YOLO2</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/03/20/%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2021-12-28 22:25:53
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" title="深度学习">
+                        <b>#</b> 深度学习
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" title="目标检测">
+                        <b>#</b> 目标检测
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#YOLO"><span class="toc-text">YOLO</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-text">网络结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%84%E6%B5%8B%E8%BE%93%E5%87%BA"><span class="toc-text">预测输出</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LOSS%E8%AE%BE%E8%AE%A1"><span class="toc-text">LOSS设计</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E7%82%B9%EF%BC%9A"><span class="toc-text">优点：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="toc-text">缺点：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#YOLOv2"><span class="toc-text">YOLOv2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%9C%BA%E5%92%8C%E4%B8%BB%E8%A6%81%E6%80%9D%E6%83%B3"><span class="toc-text">动机和主要思想</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#batch-normalization%EF%BC%88%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96%EF%BC%89"><span class="toc-text">batch normalization（批归一化）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#High-Resolution-Classifier%EF%BC%88%E8%AE%AD%E7%BB%83%E5%88%86%E7%B1%BB%E5%99%A8%E4%BD%BF%E7%94%A8%E9%AB%98%E5%88%86%E8%BE%A8%E7%8E%87%E5%9B%BE%E7%89%87%EF%BC%89"><span class="toc-text">High Resolution Classifier（训练分类器使用高分辨率图片）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#convolutional"><span class="toc-text">convolutional</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#anchor-boxes%EF%BC%88%E4%BD%BF%E7%94%A8%E9%94%9A%E6%A1%86%EF%BC%89"><span class="toc-text">anchor boxes（使用锚框）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#new-network%EF%BC%88%E6%96%B0%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%EF%BC%89"><span class="toc-text">new network（新网络结构）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dimension-priors%EF%BC%88%E7%BB%B4%E5%BA%A6%E8%81%9A%E7%B1%BB%EF%BC%89"><span class="toc-text">dimension priors（维度聚类）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Direct-location-prediction%EF%BC%88%E7%9B%B4%E6%8E%A5%E9%A2%84%E6%B5%8B%E4%BD%8D%E7%BD%AE%EF%BC%89"><span class="toc-text">Direct location prediction（直接预测位置）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#passthrough%EF%BC%88%E4%BD%BF%E7%94%A8%E4%B8%80%E4%B8%AA%E7%9B%B4%E9%80%9A%E5%B1%82%E4%BC%A0%E9%80%92%E7%BB%86%E7%B2%92%E5%BA%A6%E7%89%B9%E5%BE%81Fine-Grained-Features%EF%BC%89"><span class="toc-text">passthrough（使用一个直通层传递细粒度特征Fine-Grained Features）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Multi-Scale-Training%EF%BC%88%E5%A4%9A%E5%B0%BA%E5%BA%A6%E8%AE%AD%E7%BB%83%EF%BC%89"><span class="toc-text">Multi-Scale Training（多尺度训练）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="toc-text">测试结果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BB%E5%B9%B2%E7%BD%91%E7%BB%9C"><span class="toc-text">主干网络</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A3%80%E6%B5%8B"><span class="toc-text">检测</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E5%AE%83%E6%94%B9%E5%8A%A8"><span class="toc-text">其它改动</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%88%E6%9E%9C"><span class="toc-text">效果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-2"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87"><span class="toc-text">论文</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" href="">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" href="">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="wechat" href="">
+            <i class="iconfont icon-wechat"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="weibo" href="">
+            <i class="iconfont icon-weibo"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2021</a>
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3 + '&url=' + http%3A%2F%2Fexample.com%2F2021%2F12%2F28%2F%25E3%2580%2590%25E8%25BD%25AC%25E3%2580%2591%25E6%25B7%25B1%25E5%25BA%25A6%25E5%25AD%25A6%25E4%25B9%25A0-%25E7%259B%25AE%25E6%25A0%2587%25E6%25A3%2580%25E6%25B5%258B-YOLOv1%25E3%2580%2581YOLOv2%25E3%2580%2581YOLOv3%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2021/12/28/%E3%80%90%E8%BD%AC%E3%80%91%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B-YOLOv1%E3%80%81YOLOv2%E3%80%81YOLOv3/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

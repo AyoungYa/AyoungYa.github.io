@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="Hexo, Gruntjs, Nodejs, Reactjs, Vuejs" />
+  <meta name="author" content="小豆豆" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      概率图模型 
+      
+      
+      |
+    
+     MyAmazingGarden
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/color-scheme.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+<link rel="stylesheet" href="/css/comments.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Oranges</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">Friends</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+<!-- LaTex Display -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">概率图模型</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="更新时间"></i>
+          2021-03-12 15:32:51
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="标签"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">
+                    <b>#</b> 笔记
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" title="机器学习">
+                    <b>#</b> 机器学习
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" title="统计学习方法">
+                    <b>#</b> 统计学习方法
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>本章我们开始学习概率图模型，这里先做个简单的开篇。</p>
+<p>概率图模型所涉及到的知识点比较多，所以通过学习概率图模型可以进一步巩固机器学习的相关知识储备。</p>
+<p>现在借助以下几个问题开始概率图模型的学习：</p>
+<ul>
+<li><p><em>为什么需要概率图模型及其优点？</em></p>
+</li>
+<li><p><em>概率图模型都有哪些应用模型？</em></p>
+</li>
+</ul>
+<h2 id="为什么需要概率图模型"><a href="#为什么需要概率图模型" class="headerlink" title="为什么需要概率图模型?"></a>为什么需要概率图模型?</h2><p>对于复杂系统理解和拆分，图应当是首选的分析利器。概率图模型就是一类用图形模式表达基于概率相关关系的模型的总称。概率图模型结合概率论与图论的知识，利用图来表示与模型有关的变量的联合概率分布。</p>
+<p>也就是说，概率图模型是用图来表示实体之间的关联和约束，具体到机器学习领域就是特征和类别、特征和特征之间以及类别和类别之间的关联和约束。</p>
+<p>图的表达能力非常强，仅仅用点和线就可以表达实体之间复杂的关系。如果给关联实体的边再加附加上概率，就近一步表达了实体之间关系的强弱和推理逻辑。</p>
+<p>概率图模型具体可以给我们带来什么呢？这里可以简单概括一下：</p>
+<ul>
+<li><p>分类任务中，借助概率图建立实体之间紧凑的依赖关系，可以减小类后验概率计算所需的参数估计工作量。</p>
+</li>
+<li><p>概率图模型可以很容易与专家和领域知识结合，比如做一些实体之间的独立性假设，简化系统实体之间的依赖关系。</p>
+</li>
+</ul>
+<h3 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h3><p>概率图模型如图主要分为两种，即贝叶斯网络和马尔可夫网络。</p>
+<img src="/2021/03/12/%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/%E6%A6%82%E7%8E%87%E5%9B%BE%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.png" class>
+
+<p>贝叶斯概率图模型是有向图，因此可以解决有明确单向依赖的建模问题，而二马尔可夫概率图模型是无向图，可以适用于实体之间相互依赖的建模问题。这两种模型以及两着的混合模型应用都非常广泛。</p>
+<p>概率图模型可以很清晰的表达实体之间的依赖以及导出联合概率以及条件概率的计算公式。</p>
+<ul>
+<li><p>贝叶斯概率图依赖分析及联合概率因子分解。</p>
+<pre><code>  (B⊥C|A)
+  (D｜B,C)
+
+  P(A,B,C) = P(A)P(B｜A)P(C｜A)P(D｜B,C)
+</code></pre>
+</li>
+<li><p>马尔可夫概率图依赖分析及联合概率因子分解。</p>
+<pre><code>  (B⊥C｜A,D)
+  (A⊥D｜B,C)
+
+  P(A,B,C) = φ1(A,B)φ2(A,C)φ3(C,D)φ4(B,D)/Z
+  (Z为归一化因子，φ一般为指数函数)
+</code></pre>
+</li>
+</ul>
+<p>可以看出，有向图的联合概率可以写成各条件概率的乘积，而无向图的联合概率可以写成最大团随机变量函数的乘积。注意，图的最大团其实就是图的各个最大连通子图。</p>
+<p>概率图模型的实体关系建模可以简化或省略一些条件概率的计算，比如不用计算<code>P(D｜A,B,C)</code>，转而计算<code>P(D｜B,C)</code>的值。</p>
+<h3 id="表示、推理及学习"><a href="#表示、推理及学习" class="headerlink" title="表示、推理及学习"></a>表示、推理及学习</h3><p>现在从表示、推理和学习的角度，来进一步说明概率图模型的优点和作用。</p>
+<ul>
+<li><p>从表示的角度看，概率图模型可以很好表示实体之间关系，而且可以很容易导出相应的概率公式。同时，这种表示方法可以很容易被领域内外的人所理解。</p>
+</li>
+<li><p>从推理的角度看，当我们得到相关的信息和观测数据，我们可以很容易利用概率图导出的计算公式进行推理，给出判别结果。</p>
+</li>
+<li><p>从学习的角度看，可以利用专家经验和语料数据，对概率图模型的相关参数进行估计，效率更高而不需要估计冗余的参数。</p>
+</li>
+</ul>
+<h2 id="概率图模型都有哪些应用模型？"><a href="#概率图模型都有哪些应用模型？" class="headerlink" title="概率图模型都有哪些应用模型？"></a>概率图模型都有哪些应用模型？</h2><p>贝叶斯和马尔可夫网络是两种基本的概率图模型，结合两者又可以产生一些混合模型。那么实际应用中，有哪些模型属于概率图模型呢？</p>
+<ul>
+<li>朴素贝叶斯模型NB</li>
+<li>最大熵模型MEM</li>
+<li>隐马尔可夫模型HMM</li>
+<li>最大熵马尔可夫模型MEMM</li>
+<li>条件随机场CRF</li>
+</ul>
+<!-- * [朴素贝叶斯模型NB](../html/朴素贝叶斯模型.html) -->
+
+<!-- * [最大熵模型MEM](../html/最大熵模型.html) -->
+
+<!-- * [隐马尔可夫模型HMM](../html/隐马尔可夫模型.html) -->
+
+<!-- * [最大熵马尔可夫模型MEMM](../html/最大熵马尔可夫模型.html) -->
+
+<!-- * [条件随机场CRF](../html/条件随机场.html) -->
+
+<p>下面我们看看这些模型各自的概率图模型是怎样刻画的并分析各自所表达的含义。</p>
+
+<!-- ![](../img/概率图具体应用模型.png) -->
+
+<p>对于朴素贝叶斯模型来说，特定的类别样本在不同的特征属性上具备不同的数据表征，而且特征之间有着独立性假设，即特征之间是无关联的。</p>
+<p>对于隐马尔可夫模型来说，隐状态之间满足马尔可夫性假设，即当前状态只和前一状态有关，而与历史状态和后续状态无关；另外，还假设特征之间也是相互独立的，且特征只由当前隐状态产生。</p>
+<p>对于最大熵马尔可夫模型来说，与隐马尔可夫模型相比，每个隐状态只依赖前一状态和当前观测，而且每组这样三者的组合都是独立的，且采用最大熵模型建模。</p>
+<p>对于条件随机场模型来说，当前状态依赖于上下文状态和上下文观测，所以没有过多的独立性假设，可以自由搭配特征以及标注。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在概率图模型知识框架中，涉及的相关知识点非常多。我们熟知的很多模型都可以纳入到这个框架下，也使得我们自己积累的知识得以汇总并在此基础之上进一步爬坡。</p>
+<p>学习概率图模型时，我们可以了解到每一种模型的特点是什么、之间对比有哪些，以及每一种模型各自涵盖的知识点。</p>
+<p>比如：</p>
+<ul>
+<li><p>朴素贝叶斯模型中的特征条件独立性假设和贝叶斯定理；</p>
+</li>
+<li><p>最大熵中熵建模知识、IIS迭代尺度优化算法以及分布相似性度量方法；</p>
+</li>
+<li><p>隐马尔可夫模型中的前向后向算法、viterbi解码、以及EM参数估计；</p>
+</li>
+<li><p>条件随机场模型中条件随机场定义、学习和预测的动态规划算法。</p>
+</li>
+</ul>
+<p>当然，接下来我们也会追随这些知识点继续学习这些模型。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><strong>Probabilistic Graphical Models - Principles and Techniques Daphne Koller</strong></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/02/28/%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="更新时间"></i>
+              2021-03-12 15:32:51
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="标签"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">
+                        <b>#</b> 笔记
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" title="机器学习">
+                        <b>#</b> 机器学习
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" title="统计学习方法">
+                        <b>#</b> 统计学习方法
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2021/03/20/%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B"><span class="toc-text">为什么需要概率图模型?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-text">网络结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E7%A4%BA%E3%80%81%E6%8E%A8%E7%90%86%E5%8F%8A%E5%AD%A6%E4%B9%A0"><span class="toc-text">表示、推理及学习</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%BA%94%E7%94%A8%E6%A8%A1%E5%9E%8B%EF%BC%9F"><span class="toc-text">概率图模型都有哪些应用模型？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" href="">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="email" href="">
+            <i class="iconfont icon-envelope"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="facebook" href="">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="twitter" href="">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="wechat" href="">
+            <i class="iconfont icon-wechat"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="weibo" href="">
+            <i class="iconfont icon-weibo"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2021</a>
+        
+    </div>
+  
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B + '&url=' + http%3A%2F%2Fexample.com%2F2021%2F03%2F12%2F%25E6%25A6%2582%25E7%258E%2587%25E5%259B%25BE%25E6%25A8%25A1%25E5%259E%258B%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2021/03/12/%E6%A6%82%E7%8E%87%E5%9B%BE%E6%A8%A1%E5%9E%8B/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
